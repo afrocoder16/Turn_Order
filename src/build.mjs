@@ -15,20 +15,19 @@ const credits = read("data/image-credits.json");
 const SITE_URL = (process.env.SITE_URL || "").replace(/\/$/, "");
 
 const A = site.address;
-const addressLine = `${A.street}, ${A.city}, ${A.region} ${A.zip}`;
-const CONFIRM = `<span class="confirm" title="Not yet confirmed with the owners">Confirm with store</span>`;
 
 const DIMS = { "hero-table": [1920, 1440], chess: [1920, 1280], commander: [1920, 1280], dice: [1920, 1034], carcassonne: [1920, 1277], meeples: [1920, 1440], "magic-players": [1920, 1278], "rpg-group": [1000, 749] };
 function img(name, alt, { sizes = "(max-width: 920px) 100vw, 560px", eager = false, cls = "" } = {}) {
   const [w, h] = DIMS[name];
   const big = name === "rpg-group" ? 1000 : 1200; // the rpg-group source is only 1000px wide
-  return `<img src="assets/img/${name}-640.webp" srcset="assets/img/${name}-640.webp 640w, assets/img/${name}-${name === "hero-table" ? 900 : 1200}.webp ${name === "hero-table" ? 900 : big}w" sizes="${sizes}" width="${w}" height="${h}" alt="${alt}" ${eager ? 'fetchpriority="high"' : 'loading="lazy" decoding="async"'}${cls ? ` class="${cls}"` : ""}>`;
+  return `<img src="assets/img/${name}-640.webp" srcset="assets/img/${name}-640.webp 640w, assets/img/${name}-1200.webp ${big}w" sizes="${sizes}" width="${w}" height="${h}" alt="${alt}" ${eager ? 'fetchpriority="high"' : 'loading="lazy" decoding="async"'}${cls ? ` class="${cls}"` : ""}>`;
 }
+const sq = (name) => `<img src="assets/img/${name}-sq.webp" width="360" height="360" alt="" decoding="async">`;
 
 const ICONS = {
   pin: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>',
   phone: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>',
-  clock: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  door: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17M4 21h16"/><circle cx="14.5" cy="12.5" r=".8"/></svg>',
   chat: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.5 7.2L4 20l1-4.5A8 8 0 1 1 21 12z"/></svg>',
 };
 
@@ -42,7 +41,6 @@ const NAV = [
 ];
 
 function layout({ file, title, desc, body, schema = [], ogImage = "og.jpg", preloadHero = false }) {
-  const preload = preloadHero ? '<link rel="preload" as="image" href="assets/img/hero-table-640.webp" imagesrcset="assets/img/hero-table-640.webp 640w, assets/img/hero-table-900.webp 900w" imagesizes="(max-width: 920px) 90vw, 470px" fetchpriority="high">' : "";
   const abs = (p) => (SITE_URL ? `${SITE_URL}/${p}` : p);
   const canonical = SITE_URL ? `<link rel="canonical" href="${SITE_URL}/${file === "index.html" ? "" : file}">` : "";
   const ld = schema.map((s) => `<script type="application/ld+json">${JSON.stringify(s)}</script>`).join("\n");
@@ -53,7 +51,7 @@ function layout({ file, title, desc, body, schema = [], ogImage = "og.jpg", prel
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${title}</title>
 <meta name="description" content="${desc}">
-<meta name="theme-color" content="#0b1226">
+<meta name="theme-color" content="#050816">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Turn Order">
 <meta property="og:title" content="${title}">
@@ -62,16 +60,15 @@ function layout({ file, title, desc, body, schema = [], ogImage = "og.jpg", prel
 <meta name="twitter:card" content="summary_large_image">
 ${canonical}
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="assets/fonts/bricolage-grotesque.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/chakra-petch-700-italic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/dm-sans.woff2" as="font" type="font/woff2" crossorigin>
-${preload}
 <link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/styles.css">
 ${ld}
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<aside class="concept" aria-label="Concept notice">Unofficial <b>Midvora</b> concept: a sample design, not the shop's official website.</aside>
+<aside class="concept" aria-label="Concept notice">Concept preview by <b>Midvora</b> · not the shop's official website</aside>
 <header class="site-header">
   <div class="wrap bar">
     <a class="brand" href="index.html" aria-label="Turn Order, home">${LOGO}<span>Turn Order</span></a>
@@ -116,7 +113,7 @@ ${body}
         </ul>
       </div>
     </div>
-    <p class="fine">Unofficial Midvora sample concept. Hours from the Marshall Area Chamber listing; events from the shop's public October 2026 schedule. Photos are licensed placeholders from Wikimedia Commons (<a href="credits.html">credits</a>) to be replaced with the shop's own. Facebook, Instagram, TikTok and Discord are separate services.</p>
+    <p class="fine">Concept preview by Midvora. Hours and events come from the shop's public posts and listings. Photos are licensed placeholders from Wikimedia Commons (<a href="credits.html">credits</a>) to be replaced with the shop's own. Facebook, Instagram, TikTok and Discord are separate services.</p>
   </div>
 </footer>
 <nav class="actionbar" aria-label="Quick actions">
@@ -139,23 +136,26 @@ function finish(html) {
     .join("");
 }
 
-function pageHead(kicker, h, lead) {
-  return `<section class="hero" style="background:linear-gradient(180deg,var(--navy-900),var(--navy-950))">
-  <div class="wrap" style="grid-template-columns:1fr;padding-block:clamp(2.2rem,5vw,4rem)">
-    <div><p class="eyebrow">${kicker}</p><h1 style="font-size:clamp(2.2rem,5.5vw,4rem)">${h}</h1><p class="lead">${lead}</p></div>
+function pageHero(kicker, h, lead, extra = "") {
+  return `<section class="page-hero">
+  <div class="wrap">
+    <p class="kicker">${kicker}</p>
+    <h1>${h}</h1>
+    <p class="lead">${lead}</p>
+    ${extra}
   </div>
 </section>`;
 }
 
-const hoursRows = "<tbody>" + site.hours
-  .map((h, i) => `<tr data-dow="${i}"><th scope="row">${h.day}</th><td>${h.open ? `${fmt(h.open)} – ${fmt(h.close)}` : '<span class="closed">Closed</span>'}</td></tr>`)
-  .join("\n") + "</tbody>";
 function fmt(t) {
   let h = +t.slice(0, 2);
   const ap = h >= 12 ? "pm" : "am";
   h = h % 12 || 12;
   return `${h} ${ap}`;
 }
+const hoursRows = "<tbody>" + site.hours
+  .map((h, i) => `<tr data-dow="${i}"><th scope="row">${h.day}</th><td>${h.open ? `${fmt(h.open)} – ${fmt(h.close)}` : '<span class="closed">Closed</span>'}</td></tr>`)
+  .join("\n") + "</tbody>";
 
 const localBusiness = {
   "@context": "https://schema.org",
@@ -169,7 +169,7 @@ const localBusiness = {
     { "@type": "OpeningHoursSpecification", dayOfWeek: ["Friday", "Saturday"], opens: "12:00", closes: "22:00" },
   ],
   sameAs: Object.values(site.socials),
-  ...(SITE_URL ? { url: SITE_URL, image: `${SITE_URL}/assets/img/hero-table-1200.webp` } : {}),
+  ...(SITE_URL ? { url: SITE_URL, image: `${SITE_URL}/assets/img/og.jpg` } : {}),
 };
 const werewolf = events.find((e) => e.type === "special");
 const werewolfLd = {
@@ -188,31 +188,55 @@ const werewolfLd = {
 const pages = {};
 
 /* ---------------- HOME ---------------- */
+const tiles = [
+  { href: "play.html", img: "meeples", label: "Play", sub: "Open tables", x: -0.5, y: -0.75 },
+  { href: "events.html", img: "magic-players", label: "Events", sub: "Weekly nights", x: 0.5, y: -0.75 },
+  { href: "rooms.html", img: "rpg-group", label: "Rooms", sub: "Private tables", x: -1, y: 0 },
+  { href: "play.html#shop", img: "carcassonne", label: "Shop", sub: "Take games home", x: 1, y: 0 },
+  { href: "events.html#chess", img: "chess", label: "Chess", sub: "Monday nights", x: -0.5, y: 0.75 },
+  { href: "visit.html", img: "hero-table", label: "Visit", sub: "Hours and map", x: 0.5, y: 0.75 },
+];
+const marquee = ["Learn to Play Thursdays", "Friday Night Magic", "Sunday Villainous", "Chess Nights", "Open Play Tables", "Private Rooms", "Snack Bar", "Board Games", "Card Games", "Tabletop RPGs", "Dice"];
+const marqueeSet = marquee.map((m) => `<span class="marquee-item">${m}</span>`).join("");
+
 pages["index.html"] = layout({
   file: "index.html",
   title: "Turn Order | Board games and open play in Marshall, MN",
   desc: "Board-game shop and play space on College Drive in Marshall, MN. Open tables, Learn to Play Thursdays, Friday Night Magic, chess and private rooms.",
   schema: [localBusiness],
-  preloadHero: true,
   body: `
 <section class="hero">
-  <div class="wrap">
+  <canvas id="hex-field" aria-hidden="true"></canvas>
+  <div class="wrap hero-grid">
     <div>
-      <p class="eyebrow">Board games · Open tables · Marshall, MN</p>
-      <h1>Your next game night starts <em>here.</em></h1>
-      <p class="lead">Turn Order is a board-game shop and play space on College Drive. Grab an open table, learn something new on Thursdays, or come see what's on the shelves.</p>
+      <p class="eyebrow"><span class="status" data-status data-state="closed">Checking hours…</span></p>
+      <h1>Your next <span class="grad">game night</span> starts here.</h1>
+      <p class="lead">Board games, open tables and a crowd that actually wants to play. Turn Order is a board-game shop and play space on College Drive in Marshall.</p>
       <div class="actions">
         <a class="btn btn-primary" href="events.html">See what's on</a>
         <a class="btn btn-ghost" href="visit.html">Plan your visit</a>
       </div>
-      <span class="status" data-status data-state="closed">Checking hours…</span>
-      <div class="next-card" id="hero-next" aria-live="polite"><small>Next up</small><strong>See the full schedule</strong><span><a href="events.html" style="color:inherit">Events →</a></span></div>
+      <div class="next-card" id="hero-next" aria-live="polite"><small>Next up</small><strong>See the full schedule</strong><span><a href="events.html" style="color:inherit">Events →</a></span><span class="count">&nbsp;</span></div>
     </div>
-    <div class="hex-frame">
-      <div class="hex hex-bg"></div>
-      <div class="hex hex-img">${img("hero-table", "A sprawling board game laid out across a wooden table, seen from above", { sizes: "(max-width: 920px) 90vw, 470px", eager: true })}</div>
-      <div class="hex-chip c1" style="--r:-4deg">Open tables</div>
-      <div class="hex-chip c2" style="--r:3deg">2 private rooms</div>
+    <div class="board-col">
+      <div class="board" role="group" aria-label="Explore Turn Order">
+${tiles.map((t) => `        <div class="tile-wrap" style="--x:${t.x};--y:${t.y}"><a class="tile" href="${t.href}"><span class="tile-in">${sq(t.img)}<span class="tile-label">${t.label}<small>${t.sub}</small></span></span></a></div>`).join("\n")}
+        <div class="tile-wrap die-wrap" style="--x:0;--y:0">
+          <button class="tile die" id="die" type="button" aria-label="Roll the twenty-sided die to pick tonight's game">
+            <span class="tile-in">
+              <svg class="die-svg" viewBox="0 0 100 100" aria-hidden="true">
+                <polygon class="die-body" points="50,3 92,26.5 92,73.5 50,97 8,73.5 8,26.5"/>
+                <polygon class="die-face" points="50,22 77,67 23,67"/>
+                <path class="die-edges" d="M50 22V3M50 22 8 26.5M50 22 92 26.5M77 67 92 26.5M77 67 92 73.5M77 67 50 97M23 67 8 26.5M23 67 8 73.5M23 67 50 97"/>
+                <text id="die-num" x="50" y="58" text-anchor="middle">20</text>
+              </svg>
+              <span class="tile-label">Roll</span>
+            </span>
+          </button>
+        </div>
+      </div>
+      <p class="board-hint" id="board-hint">Tap the die. It picks <b>tonight's game</b>.</p>
+      <div class="roll-card" id="roll-card" aria-live="polite" hidden></div>
     </div>
   </div>
 </section>
@@ -224,33 +248,47 @@ pages["index.html"] = layout({
   </div>
 </section>
 
-<section class="section">
+<div class="marquee" aria-hidden="true"><div class="marquee-track"><div class="marquee-set">${marqueeSet}</div><div class="marquee-set">${marqueeSet}</div></div></div>
+
+<section class="section" id="week">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="kicker">Weekly turn order</p>
+      <h2>Whose turn is it? <span class="grad">Yours.</span></h2>
+      <p>Pick a day to see what's on. Save anything to your calendar or send it to your group.</p>
+    </div>
+    <div class="tracker reveal" id="tracker" role="tablist" aria-label="Pick a day"></div>
+    <div class="day-panel" id="day-panel" role="tabpanel" aria-live="polite"><noscript><div class="panel-note">See the schedule on <a href="${site.socials.facebook}">our Facebook page</a>.</div></noscript></div>
+    <p style="margin-top:1.4rem"><a class="btn btn-ghost" href="events.html">Full schedule</a></p>
+  </div>
+</section>
+
+<section class="section alt">
   <div class="wrap">
     <div class="section-head reveal">
       <p class="kicker">Three ways to play</p>
       <h2>Come solo, bring friends, or book a room.</h2>
     </div>
     <div class="grid g3">
-      <article class="card reveal"><div class="num">1</div><h3>Drop in</h3><p>Open tables for board games, card games and dice, with light snacks on hand. Open play is free or a small fee. ${CONFIRM}</p><a class="more" href="play.html">How open play works →</a></article>
-      <article class="card reveal"><div class="num">2</div><h3>Join an event</h3><p>Learn to Play Thursdays, Friday Night Magic, Sunday Villainous, chess nights, and special nights like Halloween Werewolf.</p><a class="more" href="events.html">See the calendar →</a></article>
-      <article class="card reveal"><div class="num">3</div><h3>Book a room</h3><p>Two private rooms, rented by the hour, for your group's own session. Write your request in 30 seconds.</p><a class="more" href="rooms.html">Plan a private game →</a></article>
+      <a class="pcard tilt reveal" href="play.html">${img("meeples", "A board game in progress on a wooden table, with colorful pawns on the board", { sizes: "(max-width: 920px) 100vw, 380px" })}<div class="pcard-body"><span class="hexicon">1</span><h3>Drop in</h3><p>Grab a table, pick a game from the dedicated library, and start playing. Light snacks on hand.</p><span class="more">How open play works →</span></div></a>
+      <a class="pcard tilt reveal" href="events.html">${img("magic-players", "Two players holding fanned-out trading cards over a table", { sizes: "(max-width: 920px) 100vw, 380px" })}<div class="pcard-body"><span class="hexicon">2</span><h3>Join an event</h3><p>Learn to Play Thursdays, Friday Night Magic, Sunday Villainous, chess nights and special one-offs.</p><span class="more">See the calendar →</span></div></a>
+      <a class="pcard tilt reveal" href="rooms.html">${img("rpg-group", "Friends gathered around a table playing a tabletop role-playing game", { sizes: "(max-width: 920px) 100vw, 380px" })}<div class="pcard-body"><span class="hexicon">3</span><h3>Book a room</h3><p>Two private rooms with tables that seat 6 to 8 players, rented by the hour.</p><span class="more">Plan a private game →</span></div></a>
     </div>
   </div>
 </section>
 
-<section class="section cream2">
+<section class="section">
   <div class="wrap">
-    <div class="section-head reveal">
-      <p class="kicker">Coming up</p>
-      <h2>What's on this week.</h2>
-      <p>Every event is free to browse. Tap "Add to calendar" to save one to your phone.</p>
+    <div class="stats">
+      <div class="stat tilt reveal"><b class="count-up" data-to="6">6</b><span>Days open a week</span></div>
+      <div class="stat tilt reveal"><b class="count-up" data-to="4">4</b><span>Event nights a week</span></div>
+      <div class="stat tilt reveal"><b class="count-up" data-to="2">2</b><span>Private rooms</span></div>
+      <div class="stat tilt reveal"><b>6–8</b><span>Seats per room table</span></div>
     </div>
-    <div id="next-events"><noscript><div class="empty"><p>See the schedule on <a href="${site.socials.facebook}">our Facebook page</a>.</p></div></noscript></div>
-    <p style="margin-top:1.4rem"><a class="btn btn-outline" href="events.html">Full schedule</a></p>
   </div>
 </section>
 
-<section class="section dark" id="finder-section">
+<section class="section alt" id="finder-section">
   <div class="wrap">
     <div class="section-head reveal">
       <p class="kicker">Game finder</p>
@@ -272,90 +310,116 @@ pages["index.html"] = layout({
               <label><input type="radio" name="vibe" value="spooky"><span>Spooky</span></label>
             </div></fieldset></div>
         </div>
-        <button class="btn btn-primary" type="submit"><span id="roll-die" aria-hidden="true">🎲</span> Roll for suggestions</button>
+        <button class="btn btn-primary" type="submit">Find my game</button>
       </form>
       <div class="results" id="finder-out" aria-live="polite"></div>
-      <p class="finder-note">A sampler, not the full shelf. Ask at the counter about the premium library too.</p>
+      <p class="finder-note">A sampler, not the full shelf. Ask at the counter about the rest of the library.</p>
     </div>
   </div>
 </section>
 
 <section class="section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="kicker">What's inside</p>
+      <h2>Everything for game night.</h2>
+    </div>
+    <div class="bento reveal">
+      <figure>${img("meeples", "A board game in progress on a wooden coffee table", { sizes: "(max-width: 920px) 100vw, 600px" })}<figcaption>Open tables<small>Grab one and start playing</small></figcaption></figure>
+      <figure>${img("dice", "Polyhedral dice in a row", { sizes: "(max-width: 920px) 50vw, 300px" })}<figcaption>Dice and accessories</figcaption></figure>
+      <figure>${img("commander", "Players at a card game table", { sizes: "(max-width: 920px) 50vw, 300px" })}<figcaption>Event nights</figcaption></figure>
+      <figure>${img("carcassonne", "A tile-laying board game with small wooden figures", { sizes: "(max-width: 920px) 100vw, 600px" })}<figcaption>Modern board games<small>Plus card games and tabletop RPGs</small></figcaption></figure>
+    </div>
+    <p class="note">Sample photos, to be replaced with the shop's own.</p>
+  </div>
+</section>
+
+<section class="section alt">
   <div class="wrap split">
     <div class="reveal">
       <p class="kicker">Why Turn Order</p>
       <h2>A place to find your people.</h2>
       <p>Owners Ana and Marcos Marrero moved to Marshall from Florida about four years ago. Marcos hadn't found a regular gaming group, so they opened a place where local players can find each other.</p>
       <p>Marcos describes Turn Order as a clean, comfortable space built by someone who actually plays the games, not a corporate chain. Whether you've played for years or have never rolled a die, there's a table with room for you.</p>
-      <p style="font-size:.85rem;color:var(--ink-soft)">Open since September 2, 2026. Sources: Marshall Independent, Aug. 28, 2026; Turn Order on Facebook.</p>
-      <a class="btn btn-dark" href="${site.socials.discord}" rel="noopener" target="_blank">Join the Discord</a>
+      <p class="note">Open since September 2, 2026. Sources: Marshall Independent, Aug. 28, 2026; Turn Order on Facebook.</p>
     </div>
-    <figure class="photo reveal" style="margin:0">${img("magic-players", "Two players holding fanned-out trading cards over a wooden table")}<figcaption>Sample photo, to be replaced with the shop's own.</figcaption></figure>
+    <figure class="photo tilt reveal">${img("magic-players", "Two players holding fanned-out trading cards over a wooden table")}<figcaption>Sample photo, to be replaced with the shop's own.</figcaption></figure>
   </div>
 </section>
 
-<section class="section dark">
-  <div class="wrap split">
+<section class="section">
+  <div class="wrap">
+    <div class="cta-band reveal">
+      <h2>Find your party.</h2>
+      <p>Chat strategy, check upcoming events and connect with fellow gamers in the Discord, or follow along on social.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="${site.socials.discord}" rel="noopener" target="_blank">Join the Discord</a>
+        <a class="btn btn-ghost" href="${site.socials.facebook}" rel="noopener" target="_blank">Facebook</a>
+        <a class="btn btn-ghost" href="${site.socials.instagram}" rel="noopener" target="_blank">Instagram</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section alt">
+  <div class="wrap split" style="align-items:start">
     <div class="reveal">
       <p class="kicker">Visit</p>
       <h2>Find us on College Drive.</h2>
       <p>${A.street}<br>${A.city}, ${A.region} ${A.zip}</p>
+      <p>Look for the big red 6 on the door.</p>
       <p><span class="status" data-status data-state="closed">Checking hours…</span></p>
       <div class="actions"><a class="btn btn-primary" href="${site.mapsUrl}" rel="noopener" target="_blank">Get directions</a><a class="btn btn-ghost" href="${site.phoneHref}">Call ${site.phone}</a></div>
     </div>
-    <table class="hours reveal" style="color:var(--ink)"><caption class="sr-only">Opening hours</caption>${hoursRows}</table>
+    <table class="hours reveal"><caption class="sr-only">Opening hours</caption>${hoursRows}</table>
   </div>
 </section>
 `,
+  preloadHero: false,
 });
 
 /* ---------------- PLAY ---------------- */
 const faqPlay = [
-  ["Is open play free?", `<p>Open tables are free or carry a small fee. ${CONFIRM}</p><p>Trying a game from the premium library, which has 100+ titles, was planned at $5 to $10 when the shop announced its opening in August 2026. ${CONFIRM}</p>`],
-  ["I've never played a modern board game. Where do I start?", `<p>Thursday evenings are Learn to Play nights, 6 to 7 pm, where a different game is taught each week. The Halloween Werewolf night on October 24 is also beginner-friendly. Or <a href="index.html#finder-section">try the game finder</a>.</p>`],
+  ["Is open play free?", `<p>Open play is free or a small fee. Ask at the counter for today's details.</p>`],
+  ["I've never played a modern board game. Where do I start?", `<p>Thursday evenings are Learn to Play nights, 6 to 7 pm, where a different game is taught each week. Special nights like Halloween Werewolf are beginner-friendly too. Or <a href="index.html#finder-section">try the game finder</a>.</p>`],
   ["Is there food?", `<p>Yes. There's a snack bar and cooler with sodas, energy drinks and snacks, for purchase.</p>`],
-  ["Can kids play?", `<p>Monday's Kids Chess hour runs 5 to 6 pm. For other events, ask us about age suitability. ${CONFIRM}</p>`],
-  ["Do I need to reserve a table?", `<p>Reservations for open tables aren't posted. Call ${site.phone} to ask. If you want a guaranteed space for a group, look at the <a href="rooms.html">private rooms</a>. ${CONFIRM}</p>`],
+  ["Can kids play?", `<p>Monday's Kids Chess hour runs 5 to 6 pm. Ask us about ages for other events.</p>`],
+  ["Do I need to reserve a table?", `<p>Open tables are come-and-play: grab one and start. Want a guaranteed space for your group? Book a <a href="rooms.html">private room</a>.</p>`],
 ];
 pages["play.html"] = layout({
   file: "play.html",
   title: "Play & Shop | Turn Order, Marshall MN",
-  desc: "Open tables, a premium game library and a shelf of board games, card games and dice at Turn Order in Marshall, MN.",
+  desc: "Open tables, a game library and shelves of board games, card games, tabletop RPGs and accessories at Turn Order in Marshall, MN.",
   schema: [localBusiness, { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqPlay.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a.replace(/<[^>]+>/g, "") } })) }],
   body: `
-${pageHead("Play & Shop", "Sit down. Play something.", "Open tables, a game library to borrow from, and shelves of games to take home.")}
+${pageHero("Play & Shop", "Sit down. <span class=\"grad\">Play something.</span>", "Open tables, a game library to pick from, and shelves of games to take home.")}
 <section class="section">
-  <div class="wrap split">
-    <div class="reveal">
-      <p class="kicker">Open play</p>
-      <h2>Tables are waiting.</h2>
-      <ul class="ticks">
-        <li><span>Grab a table, pick a game from the dedicated library, and start playing.</span></li>
-        <li><span>Open play is free or a small fee. ${CONFIRM}</span></li>
-        <li><span>A premium library of 100+ games to try, planned at $5 to $10. ${CONFIRM}</span></li>
-        <li><span>A snack bar and cooler with sodas, energy drinks and snacks, for purchase.</span></li>
-      </ul>
-      <a class="btn btn-dark" href="index.html#finder-section">Not sure what to play? Try the finder</a>
+  <div class="wrap">
+    <div class="section-head reveal"><p class="kicker">Open play</p><h2>Tables are waiting.</h2></div>
+    <div class="grid g3">
+      <div class="card tilt reveal"><span class="hexicon">1</span><h3>Grab a table</h3><p>Pick a game from the dedicated library and start playing. No fuss.</p></div>
+      <div class="card tilt reveal"><span class="hexicon">2</span><h3>Free or a small fee</h3><p>Ask at the counter for today's details. Staff can also point you to a game that fits your group.</p></div>
+      <div class="card tilt reveal"><span class="hexicon">3</span><h3>Snack up</h3><p>A snack bar and cooler with sodas, energy drinks and snacks, for purchase.</p></div>
     </div>
-    <figure class="photo reveal" style="margin:0">${img("meeples", "A board game in progress on a wooden coffee table, with colorful pawns on the board")}<figcaption>Sample photo, to be replaced with the shop's own.</figcaption></figure>
+    <p style="margin-top:1.6rem"><a class="btn btn-ghost" href="index.html#finder-section">Not sure what to play? Try the finder</a></p>
   </div>
 </section>
 
-<section class="section cream2" id="shop">
+<section class="section alt" id="shop">
   <div class="wrap split">
-    <figure class="photo reveal" style="margin:0">${img("carcassonne", "Tile-laying board game spread across a table with small wooden figures")}<figcaption>Sample photo, to be replaced with the shop's own.</figcaption></figure>
+    <figure class="photo tilt reveal">${img("carcassonne", "A tile-laying board game spread across a table with small wooden figures")}<figcaption>Sample photo, to be replaced with the shop's own.</figcaption></figure>
     <div class="reveal">
       <p class="kicker">The shop</p>
       <h2>Take the fun home.</h2>
       <p>Turn Order stocks modern board games, card games, tabletop RPGs and gaming accessories, from first-game-night picks to things for the long-time hobbyist.</p>
       <p><b>Seasonal pick (${site.seasonal.asOf}):</b> ${site.seasonal.text}</p>
-      <p>Shopping is in store. There's no online checkout in this concept, and stock changes, so call ${site.phone} to ask whether something's on the shelf.</p>
-      <a class="btn btn-dark" href="${site.phoneHref}">Call the shop</a>
+      <p>Shopping is in store, and stock changes, so call ${site.phone} to ask whether something's on the shelf.</p>
+      <a class="btn btn-primary" href="${site.phoneHref}">Call the shop</a>
     </div>
   </div>
 </section>
 
-<section class="section dark" id="request">
+<section class="section" id="request">
   <div class="wrap split">
     <div class="reveal">
       <p class="kicker">Game requests</p>
@@ -382,7 +446,7 @@ ${pageHead("Play & Shop", "Sit down. Play something.", "Open tables, a game libr
   </div>
 </section>
 
-<section class="section">
+<section class="section alt">
   <div class="wrap" style="max-width:820px">
     <div class="section-head reveal"><p class="kicker">Good to know</p><h2>Open play questions.</h2></div>
     <div class="faq">
@@ -398,23 +462,22 @@ pages["events.html"] = layout({
   file: "events.html",
   title: "Events | Turn Order, Marshall MN",
   desc: "Learn to Play Thursdays, Friday Night Magic, Sunday Villainous, chess nights and special events at Turn Order in Marshall, MN.",
-  
   schema: [localBusiness, werewolfLd],
   body: `
-${pageHead("Events", "Always something on the table.", "A regular rhythm all week, plus special nights. Past events hide themselves automatically.")}
-<section class="section dark">
+${pageHero("Events", "Always something <span class=\"grad\">on the table.</span>", "A regular rhythm all week, plus special nights. Past events hide themselves automatically.")}
+<section class="section alt">
   <div class="wrap">
     <div class="section-head reveal"><p class="kicker">The weekly rhythm</p><h2>Your week at Turn Order.</h2><p>Based on the shop's October 2026 schedule. Later months will be posted on Facebook.</p></div>
     <div class="rhythm reveal">
       <div><b>Monday</b><span>Kids Chess 5 to 6 pm, then Open Chess 6 to 8 pm.</span></div>
       <div><b>Thursday</b><span>Learn to Play, 6 to 7 pm. A new game each week.</span></div>
       <div><b>Friday</b><span>Friday Night Magic, 6 to 9 pm.</span></div>
-      <div><b>Sunday</b><span>Villainous at 4 pm.</span></div>
+      <div><b>Sunday</b><span>Villainous, 4 to 6 pm.</span></div>
     </div>
   </div>
 </section>
 <section class="section">
-  <div class="wrap" style="max-width:900px">
+  <div class="wrap" style="max-width:960px">
     <div class="section-head reveal"><p class="kicker">Calendar</p><h2>Upcoming events.</h2></div>
     <div class="filter-row"><div class="filters" role="group" aria-label="Filter events by type">
       <button type="button" data-filter="all" aria-pressed="true">All</button>
@@ -425,7 +488,7 @@ ${pageHead("Events", "Always something on the table.", "A regular rhythm all wee
       <button type="button" data-filter="special" aria-pressed="false">Special</button>
     </div><button type="button" class="btn btn-outline btn-sm" id="add-all" hidden>Add all to calendar</button></div>
     <div id="event-list" aria-live="polite"><noscript><div class="empty"><p>JavaScript shows the live calendar. Until then, see <a href="${site.socials.facebook}">our Facebook page</a>.</p></div></noscript></div>
-    <p style="color:var(--ink-soft);font-size:.9rem;margin-top:2rem">Fees and age guidance aren't posted for most events. Ask at the shop. ${CONFIRM} Times are Central. RSVP links go to Facebook.</p>
+    <p class="note" style="margin-top:2rem">Questions about an event? Call or message us. Times are Central. RSVP links go to Facebook.</p>
   </div>
 </section>
 `,
@@ -434,34 +497,32 @@ ${pageHead("Events", "Always something on the table.", "A regular rhythm all wee
 /* ---------------- ROOMS ---------------- */
 const faqRooms = [
   ["How do I book a room?", `<p>Text or call ${site.phone}. The request builder above writes the message for you. Nothing is sent from this website; it opens your own messaging app, or you can copy the text.</p>`],
-  ["How much does a room cost?", `<p>Two private rooms are rented by the hour. Rates aren't posted yet. ${CONFIRM}</p>`],
+  ["How much does a room cost?", `<p>Rooms are rented by the hour. Tell us your date and group size and we'll confirm rates and availability.</p>`],
   ["How many people fit?", `<p>The private rooms have custom gaming tables that seat 6 to 8 players.</p>`],
   ["What can I do in a room?", `<p>Rooms are for your group's own game session: board games, card games, a campaign or a birthday. Ask about using the shop's library.</p>`],
 ];
 pages["rooms.html"] = layout({
   file: "rooms.html",
   title: "Private rooms | Turn Order, Marshall MN",
-  desc: "Rent one of two private rooms by the hour at Turn Order in Marshall, MN for your group's own game session.",
-  
+  desc: "Rent one of two private rooms by the hour at Turn Order in Marshall, MN, with tables that seat 6 to 8 players.",
   schema: [localBusiness],
   body: `
-${pageHead("Private rooms", "Your table. Your rules.", "Two private rooms, rented by the hour, for the group that needs its own space.")}
+${pageHero("Private rooms", "Your table. <span class=\"grad\">Your rules.</span>", "Two private rooms, rented by the hour, for the group that needs its own space.", `<div class="hexrow"><div class="hexstat"><b>2</b><span>Private rooms</span></div><div class="hexstat"><b>6–8</b><span>Seats per table</span></div><div class="hexstat"><b style="font-size:1.3rem">Hourly</b><span>Rent by the hour</span></div></div>`)}
 <section class="section">
   <div class="wrap split">
     <div class="reveal">
       <p class="kicker">Good for</p>
       <h2>Campaigns, birthdays and big game days.</h2>
       <ul class="ticks">
-        <li><span>Long sessions that shouldn't be interrupted.</span></li>
-        <li><span>A group that wants to stay together and loud.</span></li>
-        <li><span>Custom gaming tables that seat 6 to 8 players.</span></li>
-        <li><span>Rates: ask when you request. ${CONFIRM}</span></li>
+        <li><span>D&D sessions and long campaigns that shouldn't be interrupted.</span></li>
+        <li><span>Deep strategy nights with a group that wants to stay together.</span></li>
+        <li><span>Private celebrations, with custom gaming tables built for 6 to 8 players.</span></li>
       </ul>
     </div>
-    <figure class="photo reveal" style="margin:0">${img("rpg-group", "Four people gathered around a table playing a tabletop role-playing game", { sizes: "(max-width: 920px) 100vw, 560px" })}<figcaption>Sample photo, to be replaced with the shop's own.</figcaption></figure>
+    <figure class="photo tilt reveal">${img("rpg-group", "Four people gathered around a table playing a tabletop role-playing game", { sizes: "(max-width: 920px) 100vw, 560px" })}<figcaption>Sample photo, to be replaced with the shop's own.</figcaption></figure>
   </div>
 </section>
-<section class="section dark">
+<section class="section alt">
   <div class="wrap">
     <div class="section-head reveal"><p class="kicker">Request builder</p><h2>Write your request in 30 seconds.</h2><p>Fill in what you know. We'll write the message, and you send it from your own phone.</p></div>
     <div class="panel reveal">
@@ -499,34 +560,35 @@ pages["visit.html"] = layout({
   file: "visit.html",
   title: "Visit | Turn Order, Marshall MN",
   desc: "Hours, address and directions for Turn Order, 1113 E College Dr, Suite 6, Marshall, MN. Open daily except Tuesday.",
-  
   schema: [localBusiness],
   body: `
-${pageHead("Visit", "Come say hi.", "Open every day except Tuesday. Walk in, grab a table, ask us anything.")}
+${pageHero("Visit", "Come <span class=\"grad\">say hi.</span>", "Open every day except Tuesday. Walk in, grab a table, ask us anything.")}
 <section class="section">
   <div class="wrap split" style="align-items:start">
     <div class="reveal">
       <h2>Hours</h2>
       <p><span class="status" data-status data-state="closed">Checking hours…</span></p>
       <table class="hours"><caption class="sr-only">Opening hours</caption>${hoursRows}</table>
-      <p style="font-size:.88rem;color:var(--ink-soft);margin-top:.8rem">Hours from the ${site.hoursSource}. For holidays or changes, check <a href="${site.socials.facebook}" rel="noopener" target="_blank">Facebook</a>.</p>
+      <p class="note">For holidays or changes, check <a href="${site.socials.facebook}" rel="noopener" target="_blank" style="color:var(--cyan)">Facebook</a>.</p>
     </div>
     <div class="reveal">
       <h2>Find us</h2>
       <ul class="facts">
         <li><span class="ico">${ICONS.pin}</span><div><b>Address</b>${A.street}<br>${A.city}, ${A.region} ${A.zip}<br><a href="${site.mapsUrl}" rel="noopener" target="_blank">Open in Google Maps →</a></div></li>
+        <li><span class="ico">${ICONS.door}</span><div><b>Look for the 6</b>We're Suite 6. There's a big red 6 on the door.</div></li>
         <li><span class="ico">${ICONS.phone}</span><div><b>Call or text</b><a href="${site.phoneHref}">${site.phone}</a></div></li>
-        <li><span class="ico">${ICONS.clock}</span><div><b>Parking &amp; access</b>Not yet posted. ${CONFIRM}</div></li>
         <li><span class="ico">${ICONS.chat}</span><div><b>Community</b><a href="${site.socials.discord}" rel="noopener" target="_blank">Discord</a> · <a href="${site.socials.facebook}" rel="noopener" target="_blank">Facebook</a> · <a href="${site.socials.instagram}" rel="noopener" target="_blank">Instagram</a> · <a href="${site.socials.tiktok}" rel="noopener" target="_blank">TikTok</a></div></li>
       </ul>
     </div>
   </div>
 </section>
-<section class="section dark">
-  <div class="wrap reveal" style="text-align:center;max-width:700px">
-    <h2>First time? Here's the plan.</h2>
-    <p class="lead" style="color:#c3d1ef">Come in, find an open table, and ask us what's good. On Thursdays from 6 pm we'll teach you a new game.</p>
-    <div class="actions" style="justify-content:center"><a class="btn btn-primary" href="events.html">See events</a><a class="btn btn-ghost" href="play.html">How open play works</a></div>
+<section class="section">
+  <div class="wrap">
+    <div class="cta-band reveal">
+      <h2>First time? Here's the plan.</h2>
+      <p>Come in, find an open table, and ask us what's good. On Thursdays from 6 pm we'll teach you a new game.</p>
+      <div class="actions"><a class="btn btn-primary" href="events.html">See events</a><a class="btn btn-ghost" href="play.html">How open play works</a></div>
+    </div>
   </div>
 </section>
 `,
@@ -536,20 +598,20 @@ ${pageHead("Visit", "Come say hi.", "Open every day except Tuesday. Walk in, gra
 pages["credits.html"] = layout({
   file: "credits.html",
   title: "Photo credits | Turn Order concept",
-  desc: "Credits for the placeholder photos used in this unofficial sample website.",
+  desc: "Credits for the placeholder photos used in this concept preview.",
   body: `
-${pageHead("Credits", "Photo credits.", "Placeholder photos for this unofficial concept. Replace them with the shop's own before sharing publicly.")}
+${pageHero("Credits", "Photo <span class=\"grad\">credits.</span>", "Placeholder photos for this concept preview. Replace them with the shop's own before sharing publicly.")}
 <section class="section"><div class="wrap" style="max-width:820px">
 <ul style="padding-left:1.1rem;display:grid;gap:.8rem">
-${credits.map((c) => `<li><a href="${c.page}" rel="noopener">${c.title.replace("File:", "")}</a> by ${c.artist || "unknown"}, ${c.license}.</li>`).join("\n")}
+${credits.map((c) => `<li><a href="${c.page}" rel="noopener" style="color:var(--cyan)">${c.title.replace("File:", "")}</a> by ${c.artist || "unknown"}, ${c.license}.</li>`).join("\n")}
 </ul></div></section>`,
 });
 pages["404.html"] = layout({
   file: "404.html",
   title: "Page not found | Turn Order",
   desc: "That page wandered off. Head back to the table.",
-  body: `${pageHead("404", "That page rolled off the table.", "Let's get you back to the game.")}
-<section class="section"><div class="wrap"><a class="btn btn-dark" href="index.html">Back to home</a></div></section>`,
+  body: `${pageHero("404", "That page rolled <span class=\"grad\">off the table.</span>", "Let's get you back to the game.")}
+<section class="section"><div class="wrap"><a class="btn btn-primary" href="index.html">Back to home</a></div></section>`,
 });
 
 for (const [f, html] of Object.entries(pages)) fs.writeFileSync(path.join(root, f), html);

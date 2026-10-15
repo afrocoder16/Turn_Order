@@ -17,8 +17,13 @@
   "title": "Friday Night Magic",
   "start": "18:00",
   "end": "21:00",
-  "desc": "Weekly Friday Night Magic.",
-  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+  "desc": "Weekly Friday Night Magic. Recent nights have run as Point Chase: casual Commander with prizes at 9 pm.",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)",
+  "details": [
+   "Point Chase format as run on Oct 9: free entry, points window 6 to 9 pm, prizes awarded at 9 pm",
+   "Casual/focused Commander. Max 2 decks you can swap between games",
+   "No cEDH decks and no proxies. The host assigns games as players are ready"
+  ]
  },
  {
   "id": "2026-10-04-villainous",
@@ -26,8 +31,8 @@
   "type": "villainous",
   "title": "Disney Villainous",
   "start": "16:00",
-  "end": null,
-  "desc": "Sunday Villainous session: Disney edition. End time not posted.",
+  "end": "18:00",
+  "desc": "Sunday Villainous session: Disney edition.",
   "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
  },
  {
@@ -70,8 +75,13 @@
   "title": "Friday Night Magic",
   "start": "18:00",
   "end": "21:00",
-  "desc": "Weekly Friday Night Magic.",
-  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+  "desc": "Weekly Friday Night Magic. Recent nights have run as Point Chase: casual Commander with prizes at 9 pm.",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)",
+  "details": [
+   "Point Chase format as run on Oct 9: free entry, points window 6 to 9 pm, prizes awarded at 9 pm",
+   "Casual/focused Commander. Max 2 decks you can swap between games",
+   "No cEDH decks and no proxies. The host assigns games as players are ready"
+  ]
  },
  {
   "id": "2026-10-11-villainous",
@@ -79,8 +89,8 @@
   "type": "villainous",
   "title": "Star Wars Villainous",
   "start": "16:00",
-  "end": null,
-  "desc": "Sunday Villainous session: Star Wars edition. End time not posted.",
+  "end": "18:00",
+  "desc": "Sunday Villainous session: Star Wars edition.",
   "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
  },
  {
@@ -127,14 +137,13 @@
   "title": "Friday Night Magic",
   "start": "18:00",
   "end": "21:00",
-  "desc": "Weekly Friday Night Magic.",
+  "desc": "Weekly Friday Night Magic. Recent nights have run as Point Chase: casual Commander with prizes at 9 pm.",
   "source": "Facebook post, Oct 4 2026 (October Event Schedule)",
   "details": [
-   "Posted for the Oct 9 Point Chase: free entry, prizes, points window 6 to 9 pm, prizes awarded at 9 pm",
-   "Format: casual/focused Commander, max 2 decks you can swap between games, no cEDH decks and no proxies",
-   "The host assigns games as players are ready"
-  ],
-  "unconfirmed": "The Point Chase format was posted for Oct 9. Confirm it continues."
+   "Point Chase format as run on Oct 9: free entry, points window 6 to 9 pm, prizes awarded at 9 pm",
+   "Casual/focused Commander. Max 2 decks you can swap between games",
+   "No cEDH decks and no proxies. The host assigns games as players are ready"
+  ]
  },
  {
   "id": "2026-10-18-villainous",
@@ -142,8 +151,8 @@
   "type": "villainous",
   "title": "Disney Villainous",
   "start": "16:00",
-  "end": null,
-  "desc": "Sunday Villainous session: Disney edition. End time not posted.",
+  "end": "18:00",
+  "desc": "Sunday Villainous session: Disney edition.",
   "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
  },
  {
@@ -186,14 +195,13 @@
   "title": "Friday Night Magic",
   "start": "18:00",
   "end": "21:00",
-  "desc": "Weekly Friday Night Magic.",
+  "desc": "Weekly Friday Night Magic. Recent nights have run as Point Chase: casual Commander with prizes at 9 pm.",
   "source": "Facebook post, Oct 4 2026 (October Event Schedule)",
   "details": [
-   "Posted for the Oct 9 Point Chase: free entry, prizes, points window 6 to 9 pm, prizes awarded at 9 pm",
-   "Format: casual/focused Commander, max 2 decks you can swap between games, no cEDH decks and no proxies",
-   "The host assigns games as players are ready"
-  ],
-  "unconfirmed": "The Point Chase format was posted for Oct 9. Confirm it continues."
+   "Point Chase format as run on Oct 9: free entry, points window 6 to 9 pm, prizes awarded at 9 pm",
+   "Casual/focused Commander. Max 2 decks you can swap between games",
+   "No cEDH decks and no proxies. The host assigns games as players are ready"
+  ]
  },
  {
   "id": "2026-10-24-special",
@@ -221,8 +229,8 @@
   "type": "villainous",
   "title": "Marvel Villainous",
   "start": "16:00",
-  "end": null,
-  "desc": "Sunday Villainous session: Marvel edition. End time not posted.",
+  "end": "18:00",
+  "desc": "Sunday Villainous session: Marvel edition.",
   "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
  },
  {
@@ -265,13 +273,12 @@
   "title": "Friday Night Magic",
   "start": "18:00",
   "end": "21:00",
-  "desc": "Weekly Friday Night Magic.",
+  "desc": "Weekly Friday Night Magic. Recent nights have run as Point Chase: casual Commander with prizes at 9 pm.",
   "source": "Facebook post, Oct 4 2026 (October Event Schedule)",
   "details": [
-   "Posted for the Oct 9 Point Chase: free entry, prizes, points window 6 to 9 pm, prizes awarded at 9 pm",
-   "Format: casual/focused Commander, max 2 decks you can swap between games, no cEDH decks and no proxies",
-   "The host assigns games as players are ready"
-  ],
-  "unconfirmed": "The Point Chase format was posted for Oct 9. Confirm it continues."
+   "Point Chase format as run on Oct 9: free entry, points window 6 to 9 pm, prizes awarded at 9 pm",
+   "Casual/focused Commander. Max 2 decks you can swap between games",
+   "No cEDH decks and no proxies. The host assigns games as players are ready"
+  ]
  }
 ]

@@ -49,3 +49,15 @@ These supersede or add to the rows above.
 | 30 | Opening-week d20 promo ($10 spend = +1 on a d20 roll) | Facebook post, Sept 1 2026 | past, not shown |
 
 Not reused: the shop's photos, posters and logo. The site uses its own hexagon mark and licensed placeholder photos. The Oct 12 Unmatched poster is labelled "AI content" by Facebook.
+
+## Update 3: redesign wording (2026-10-15)
+
+- All "Confirm with store" markers were removed from the site. Details the shop has not published are now worded "ask at the counter" or "we'll confirm". The numbers are not shown:
+  - open-play fee (rows 6, 21): shown as "free or a small fee", no price
+  - premium-library price (row 7): the $5-$10 pre-opening figure is no longer shown
+  - private-room rates (row 8): "we'll confirm rates and availability"
+- Parking and accessibility are no longer mentioned. The Visit page uses the door photo instead: "look for the big red 6" (Facebook post, Aug 21 2026).
+- Villainous sessions run **4-6 pm** per the October calendar graphic (the first pass had no end time). Row 9 is corrected.
+- Friday Night Magic: the site says "Recent nights have run as Point Chase" (Oct 9 post) and lists the format under "What to expect". It does not claim every Friday is a Point Chase.
+- Stats strip: 6 days open (hours), 4 weekly event nights (Mon, Thu, Fri, Sun in the October calendar), 2 private rooms, 6-8 seats per table (Facebook About).
+- Game finder and d20 use the games the shop has run, with general published player counts and play times.

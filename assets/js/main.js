@@ -1,4 +1,4 @@
-/* Turn Order sample site. No dependencies. Data is inlined by src/build.mjs. */
+/* Turn Order concept site. No dependencies. Data is inlined by src/build.mjs. */
 (function () {
   "use strict";
   document.documentElement.classList.add("js");
@@ -8,9 +8,11 @@
   var SITE = DATA.site || {}, EVENTS = DATA.events || [], GAMES = DATA.games || [], PROMOS = DATA.promos || [];
   var TZ = SITE.timezone || "America/Chicago";
   var TYPE_LABEL = { ltp: "Learn to Play", magic: "Magic", villainous: "Villainous", chess: "Chess", special: "Special event" };
+  var TYPE_COLOR = { ltp: "var(--cyan)", magic: "var(--violet)", villainous: "var(--green)", chess: "var(--amber)", special: "var(--orange)" };
   var DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  var DAYS_LONG = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  var CONFIRM = '<span class="confirm" title="Not yet confirmed with the owners">Confirm with store</span>';
+  var REDUCE = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---- time in the shop's timezone. "?now=2026-10-24T18:30" overrides it for demos. ---- */
   function chicagoNow() {
@@ -30,6 +32,8 @@
     return h + (m === "00" ? "" : ":" + m) + " " + ap;
   }
   function parseDate(s) { var a = s.split("-"); return new Date(+a[0], +a[1] - 1, +a[2]); }
+  function ymd(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  function stamp(date, time) { var a = date.split("-"), t = time.split(":"); return new Date(+a[0], +a[1] - 1, +a[2], +t[0], +t[1]).getTime(); }
   function el(tag, cls, html) { var n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
 
@@ -95,13 +99,13 @@
     var d = e.date.replace(/-/g, ""), s = e.start.replace(":", "") + "00";
     var endT = e.end || (String(+e.start.slice(0, 2) + 2).padStart(2, "0") + e.start.slice(3));
     var desc = e.desc + (e.details ? " " + e.details.join(". ") + "." : "");
-    return ["BEGIN:VEVENT", "UID:" + e.id + "@turnorder-sample", "DTSTAMP:" + new Date().toISOString().replace(/[-:]|\.\d{3}/g, ""),
+    return ["BEGIN:VEVENT", "UID:" + e.id + "@turnorder-concept", "DTSTAMP:" + new Date().toISOString().replace(/[-:]|\.\d{3}/g, ""),
       "DTSTART:" + d + "T" + s, "DTEND:" + d + "T" + endT.replace(":", "") + "00",
       "SUMMARY:" + icsEscape(e.title + " at Turn Order"), "DESCRIPTION:" + icsEscape(desc),
       "LOCATION:" + icsEscape("Turn Order, " + SITE.address.street + ", " + SITE.address.city + ", " + SITE.address.region + " " + SITE.address.zip), "END:VEVENT"];
   }
   function downloadIcs(list, name) {
-    var lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Turn Order sample//EN", "CALSCALE:GREGORIAN"];
+    var lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Turn Order concept//EN", "CALSCALE:GREGORIAN"];
     list.forEach(function (e) { lines = lines.concat(veventLines(e)); });
     lines.push("END:VCALENDAR");
     var a = document.createElement("a");
@@ -109,20 +113,32 @@
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
   }
+  function shareEvent(e, button) {
+    var d = parseDate(e.date);
+    var text = e.title + " at Turn Order, " + DAYS[d.getDay()] + " " + MONTHS[d.getMonth()] + " " + d.getDate() + ", " + eventLine(e) + ". " + SITE.address.street + ", " + SITE.address.city + ".";
+    var url = /^https?:/.test(location.href) ? location.href.split("#")[0].replace(/[^/]*$/, "events.html") : "";
+    var copied = function () { var old = button.textContent; button.textContent = "Copied!"; setTimeout(function () { button.textContent = old; }, 1800); };
+    if (navigator.share) { navigator.share({ title: e.title, text: text, url: url || undefined }).catch(function () {}); return; }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text + (url ? " " + url : "")).then(copied, function () {});
+  }
 
   function eventCard(e, today, h) {
     h = h || "h4";
     var d = parseDate(e.date);
     var card = el("article", "event" + (e.date === today ? " is-today" : ""));
     card.dataset.type = e.type;
-    card.appendChild(el("div", "when", "<small>" + DAYS[d.getDay()] + "</small><b>" + MONTHS[d.getMonth()] + " " + d.getDate() + "</b>"));
+    card.appendChild(el("div", "when", "<span><small>" + DAYS[d.getDay()] + "</small><b>" + MONTHS[d.getMonth()] + " " + d.getDate() + "</b></span>"));
     var mid = el("div", "", '<span class="chip t-' + e.type + '">' + TYPE_LABEL[e.type] + "</span><" + h + ">" + esc(e.title) + "</" + h + "><p>" + eventLine(e) + " · " + esc(e.desc) + "</p>");
     if (e.details && e.details.length) {
-      mid.appendChild(el("details", "ev-details", "<summary>What to expect</summary><ul>" + e.details.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" + (e.unconfirmed ? "<p>" + CONFIRM + " " + esc(e.unconfirmed) + "</p>" : "")));
+      mid.appendChild(el("details", "ev-details", "<summary>What to expect</summary><ul>" + e.details.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>"));
     }
     card.appendChild(mid);
     var acts = el("div", "acts");
     if (e.rsvp) { var r = el("a", "btn btn-primary btn-sm", "RSVP on Facebook"); r.href = e.rsvp; r.rel = "noopener"; r.target = "_blank"; acts.appendChild(r); }
+    var s = el("button", "btn btn-ghost btn-sm", "Share"); s.type = "button";
+    s.setAttribute("aria-label", "Share " + e.title);
+    s.addEventListener("click", function () { shareEvent(e, s); });
+    acts.appendChild(s);
     var c = el("button", "btn btn-outline btn-sm", "Add to calendar"); c.type = "button";
     c.addEventListener("click", function () { downloadIcs([e], e.id); });
     acts.appendChild(c);
@@ -134,6 +150,11 @@
   if (list) {
     var active = "all", now0 = chicagoNow().date, shown = [];
     var addAll = document.getElementById("add-all");
+    var hash = location.hash.slice(1);
+    if (TYPE_LABEL[hash]) {
+      active = hash;
+      document.querySelectorAll(".filters button").forEach(function (x) { x.setAttribute("aria-pressed", x.dataset.filter === hash); });
+    }
     var draw = function () {
       list.innerHTML = "";
       shown = upcoming().filter(function (e) { return active === "all" || e.type === active; });
@@ -146,7 +167,7 @@
       shown.forEach(function (e) { (by[e.date] = by[e.date] || []).push(e); });
       Object.keys(by).sort().forEach(function (date) {
         var d = parseDate(date), g = el("section", "day");
-        g.appendChild(el("h3", "", (date === now0 ? "Today · " : "") + ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][d.getDay()] + ", " + MONTHS[d.getMonth()] + " " + d.getDate()));
+        g.appendChild(el("h3", "", (date === now0 ? "Today · " : "") + DAYS_LONG[d.getDay()] + ", " + MONTHS[d.getMonth()] + " " + d.getDate()));
         by[date].forEach(function (e) { g.appendChild(eventCard(e, now0, "h4")); });
         list.appendChild(g);
       });
@@ -162,19 +183,88 @@
     draw();
   }
 
-  var next = document.getElementById("next-events");
-  if (next) {
-    var up = upcoming().slice(0, 4), t0 = chicagoNow().date;
-    if (!up.length) next.appendChild(el("div", "empty", "<p>The next schedule is posted on our Facebook page.</p>"));
-    up.forEach(function (e) { next.appendChild(eventCard(e, t0, "h3")); });
+  /* ---- weekly "turn order" tracker (home) ---- */
+  var trackerEl = document.getElementById("tracker");
+  if (trackerEl) {
+    var panel = document.getElementById("day-panel"), tNow = chicagoNow(), upc = upcoming(), week = [], tabs = [];
+    for (var i = 0; i < 7; i++) {
+      var dd = parseDate(tNow.date); dd.setDate(dd.getDate() + i);
+      var key = ymd(dd);
+      week.push({ key: key, d: dd, evs: upc.filter(function (e) { return e.date === key; }) });
+    }
+    var select = function (idx, focus) {
+      tabs.forEach(function (t, j) { t.setAttribute("aria-selected", j === idx); t.tabIndex = j === idx ? 0 : -1; });
+      panel.setAttribute("aria-labelledby", "tab-" + idx);
+      panel.innerHTML = "";
+      var w = week[idx], hrs = (SITE.hours || [])[w.d.getDay()];
+      if (w.evs.length) w.evs.forEach(function (e) { panel.appendChild(eventCard(e, tNow.date, "h3")); });
+      else if (hrs && hrs.open) panel.appendChild(el("div", "panel-note", "Nothing posted for " + DAYS_LONG[w.d.getDay()] + ". Doors are open " + fmtTime(hrs.open) + " to " + fmtTime(hrs.close) + ", so come grab an open table."));
+      else panel.appendChild(el("div", "panel-note", "Closed on " + DAYS_LONG[w.d.getDay()] + "s. Back the next day, and the table's waiting."));
+      if (focus) tabs[idx].focus();
+    };
+    week.forEach(function (w, idx) {
+      var hrs = (SITE.hours || [])[w.d.getDay()], types = [];
+      w.evs.forEach(function (e) { if (types.indexOf(e.type) < 0) types.push(e.type); });
+      var b = el("button", "day-tab", '<span class="day-today">' + (idx === 0 ? "Today" : "") + '</span><span class="day-hex"><b>' + w.d.getDate() + '</b></span><span class="day-name">' + DAYS[w.d.getDay()] + '</span><span class="dots">' +
+        types.map(function (t) { return '<i class="dot" style="--c:' + TYPE_COLOR[t] + '"></i>'; }).join("") + (hrs && hrs.open ? "" : '<span class="day-closed">Closed</span>') + "</span>");
+      b.type = "button"; b.id = "tab-" + idx; b.setAttribute("role", "tab"); b.setAttribute("aria-controls", "day-panel");
+      b.setAttribute("aria-label", DAYS_LONG[w.d.getDay()] + " " + MONTHS[w.d.getMonth()] + " " + w.d.getDate() + (idx === 0 ? ", today" : "") + ", " + (w.evs.length ? w.evs.length + " event" + (w.evs.length > 1 ? "s" : "") : "no events"));
+      b.addEventListener("click", function () { select(idx); });
+      b.addEventListener("keydown", function (ev) {
+        var n = ev.key === "ArrowRight" ? (idx + 1) % 7 : ev.key === "ArrowLeft" ? (idx + 6) % 7 : ev.key === "Home" ? 0 : ev.key === "End" ? 6 : -1;
+        if (n > -1) { ev.preventDefault(); select(n, true); }
+      });
+      tabs.push(b); trackerEl.appendChild(b);
+    });
+    select(0);
   }
+
+  /* ---- hero: live countdown to the next event ---- */
   var hero = document.getElementById("hero-next");
   if (hero) {
-    var first = upcoming()[0];
-    if (first) {
-      var fd = parseDate(first.date);
-      hero.innerHTML = "<small>Next up</small><strong>" + esc(first.title) + "</strong><span>" + DAYS[fd.getDay()] + ", " + MONTHS[fd.getMonth()] + " " + fd.getDate() + " · " + eventLine(first) + "</span>";
-    } else hero.hidden = true;
+    var renderHero = function () {
+      var n = chicagoNow(), first = upcoming()[0];
+      if (!first) { hero.hidden = true; return; }
+      hero.hidden = false;
+      var fd = parseDate(first.date), startMs = stamp(first.date, first.start), endMs = first.end ? stamp(first.date, first.end) : startMs + 7200000, nowMs = stamp(n.date, n.time);
+      var diff = Math.round((startMs - nowMs) / 60000), label, count;
+      if (nowMs >= startMs && nowMs <= endMs) { label = "Happening now"; count = first.end ? "In progress · until " + fmtTime(first.end) : "In progress"; }
+      else {
+        label = "Next up";
+        if (diff < 60) count = "Starts in " + diff + " min";
+        else if (first.date === n.date) count = "Starts in " + Math.floor(diff / 60) + "h " + (diff % 60) + "m";
+        else { var days = Math.round((parseDate(first.date) - parseDate(n.date)) / 86400000); count = days === 1 ? "Tomorrow at " + fmtTime(first.start) : "In " + days + " days"; }
+      }
+      hero.innerHTML = "<small>" + label + "</small><strong>" + esc(first.title) + "</strong><span>" + DAYS[fd.getDay()] + ", " + MONTHS[fd.getMonth()] + " " + fd.getDate() + " · " + eventLine(first) + '</span><span class="count">' + count + "</span>";
+    };
+    renderHero();
+    setInterval(renderHero, 30000);
+  }
+
+  /* ---- d20: "roll for tonight" picks a game ---- */
+  var die = document.getElementById("die");
+  if (die && GAMES.length) {
+    var dieNum = document.getElementById("die-num"), rollCard = document.getElementById("roll-card"), boardHint = document.getElementById("board-hint"), rolling = false;
+    var showRoll = function (n) {
+      var g = GAMES[(n - 1) % GAMES.length];
+      var head = n === 20 ? "Natural 20! Critical pick" : n === 1 ? "Natural 1. Rough roll, great game" : "You rolled a " + n;
+      rollCard.innerHTML = "<small>" + head + "</small><h3>" + esc(g.name) + "</h3><p>" + esc(g.blurb) + '</p><div class="meta"><span class="chip">' + g.min + (g.max > g.min ? "–" + g.max : "") + ' players</span><span class="chip">~' + g.minutes + ' min</span><button type="button" class="btn btn-ghost btn-sm" id="roll-again">Roll again</button></div>';
+      rollCard.hidden = false;
+      document.getElementById("roll-again").addEventListener("click", roll);
+      if (boardHint) boardHint.hidden = true;
+    };
+    var roll = function () {
+      if (rolling) return;
+      rolling = true;
+      var final = 1 + Math.floor(Math.random() * 20), steps = REDUCE ? 0 : 14, k = 0;
+      die.classList.remove("rolling"); void die.offsetWidth; if (!REDUCE) die.classList.add("rolling");
+      (function tick() {
+        if (k++ >= steps) { dieNum.textContent = final; showRoll(final); rolling = false; return; }
+        dieNum.textContent = 1 + Math.floor(Math.random() * 20);
+        setTimeout(tick, 45 + k * k * 1.6);
+      })();
+    };
+    die.addEventListener("click", roll);
   }
 
   /* ---- game finder ---- */
@@ -197,11 +287,7 @@
           '<span class="chip">~' + x.g.minutes + " min</span>" + x.why.slice(0, 1).map(function (w) { return '<span class="chip t-ltp">' + esc(w) + "</span>"; }).join("") + "</div>"));
       });
     };
-    finder.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var die = document.getElementById("roll-die"); if (die) { die.classList.remove("rolling"); void die.offsetWidth; die.classList.add("rolling"); }
-      run();
-    });
+    finder.addEventListener("submit", function (e) { e.preventDefault(); run(); });
     finder.addEventListener("change", run);
     finder.addEventListener("input", run);
     run();
@@ -246,10 +332,96 @@
     });
     if (form.elements.date) {
       var tmr = new Date(); tmr.setDate(tmr.getDate() + 1);
-      form.elements.date.min = tmr.getFullYear() + "-" + String(tmr.getMonth() + 1).padStart(2, "0") + "-" + String(tmr.getDate()).padStart(2, "0");
+      form.elements.date.min = ymd(tmr);
     }
     refresh();
   });
+
+  /* ---- interactive hex field behind the hero ---- */
+  var field = document.getElementById("hex-field");
+  if (field && field.getContext) {
+    (function () {
+      var ctx = field.getContext("2d"), R = 38, S3 = Math.sqrt(3), W = 0, H = 0, dpr = 1, grid = null, lit = {}, raf = 0, onScreen = true;
+      var center = function (c, r) { return [(c + (r & 1 ? 0.5 : 0)) * S3 * R, r * 1.5 * R]; };
+      var path = function (g, x, y, rr) {
+        g.beginPath();
+        for (var i = 0; i < 6; i++) { var a = Math.PI / 180 * (60 * i - 30); g[i ? "lineTo" : "moveTo"](x + rr * Math.cos(a), y + rr * Math.sin(a)); }
+        g.closePath();
+      };
+      var size = function () {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        var b = field.getBoundingClientRect(); W = b.width; H = b.height;
+        field.width = Math.round(W * dpr); field.height = Math.round(H * dpr);
+        grid = document.createElement("canvas"); grid.width = field.width; grid.height = field.height;
+        var g = grid.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.strokeStyle = "rgba(53,208,255,.11)"; g.lineWidth = 1;
+        for (var r = -1; r < H / (1.5 * R) + 2; r++) for (var c = -1; c < W / (S3 * R) + 2; c++) { var p = center(c, r); path(g, p[0], p[1], R - 1); g.stroke(); }
+        frame();
+      };
+      var frame = function () {
+        raf = 0;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, W, H);
+        if (grid) ctx.drawImage(grid, 0, 0, W, H);
+        var any = false;
+        for (var k in lit) {
+          var a = lit[k], rc = k.split(","), p = center(+rc[0], +rc[1]);
+          path(ctx, p[0], p[1], R - 1);
+          ctx.fillStyle = "rgba(53,208,255," + (a * 0.22).toFixed(3) + ")"; ctx.fill();
+          ctx.strokeStyle = "rgba(120,220,255," + Math.min(1, a).toFixed(3) + ")"; ctx.lineWidth = 1.4; ctx.stroke();
+          lit[k] = a * 0.93;
+          if (lit[k] < 0.03) delete lit[k]; else any = true;
+        }
+        if (any && onScreen) raf = requestAnimationFrame(frame);
+      };
+      var kick = function () { if (!raf && onScreen) raf = requestAnimationFrame(frame); };
+      var light = function (x, y, radius) {
+        var r0 = Math.round(y / (1.5 * R)), c0 = Math.round(x / (S3 * R) - (r0 & 1 ? 0.5 : 0));
+        for (var dr = -3; dr <= 3; dr++) for (var dc = -3; dc <= 3; dc++) {
+          var r = r0 + dr, c = c0 + dc, p = center(c, r), dist = Math.hypot(p[0] - x, p[1] - y);
+          if (dist < radius) { var key = c + "," + r; lit[key] = Math.max(lit[key] || 0, 1 - dist / radius); }
+        }
+      };
+      size();
+      var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(size, 150); });
+      if (REDUCE) return;
+      var host = field.parentElement;
+      host.addEventListener("pointermove", function (e) { var b = field.getBoundingClientRect(); light(e.clientX - b.left, e.clientY - b.top, 120); kick(); });
+      setInterval(function () { if (!onScreen || document.hidden) return; light(Math.random() * W, Math.random() * H * 0.9, 50); kick(); }, 700);
+      if ("IntersectionObserver" in window) new IntersectionObserver(function (es) { onScreen = es[0].isIntersecting; if (onScreen) kick(); }).observe(host);
+    })();
+  }
+
+  /* ---- 3D tilt on cards (fine pointers only) ---- */
+  if (!REDUCE && window.matchMedia && matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    document.querySelectorAll(".tilt").forEach(function (n) {
+      n.addEventListener("pointermove", function (e) {
+        var r = n.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
+        n.style.setProperty("--rx", (px * 7).toFixed(2) + "deg"); n.style.setProperty("--ry", (-py * 7).toFixed(2) + "deg");
+        n.classList.add("is-tilting");
+      });
+      n.addEventListener("pointerleave", function () { n.classList.remove("is-tilting"); });
+    });
+  }
+
+  /* ---- count-up numbers ---- */
+  var counters = document.querySelectorAll(".count-up");
+  if (counters.length) {
+    var animate = function (n) {
+      var to = +n.dataset.to, t0 = null;
+      if (REDUCE) { n.textContent = to; return; }
+      var step = function (t) {
+        if (t0 === null) t0 = t;
+        var p = Math.min(1, (t - t0) / 1000);
+        n.textContent = Math.round(to * (1 - Math.pow(1 - p, 3)));
+        if (p < 1) requestAnimationFrame(step);
+      };
+      n.textContent = "0"; requestAnimationFrame(step);
+    };
+    if ("IntersectionObserver" in window) {
+      var cio = new IntersectionObserver(function (es) { es.forEach(function (x) { if (x.isIntersecting) { animate(x.target); cio.unobserve(x.target); } }); }, { threshold: 0.6 });
+      counters.forEach(function (n) { cio.observe(n); });
+    }
+  }
 
   /* ---- reveal on scroll ---- */
   var rev = document.querySelectorAll(".reveal");
