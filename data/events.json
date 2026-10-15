@@ -1,0 +1,246 @@
+[
+ {
+  "id": "2026-10-01-ltp",
+  "date": "2026-10-01",
+  "type": "ltp",
+  "title": "Learn to Play: Heroscape",
+  "start": "18:00",
+  "end": "19:00",
+  "desc": "Thursday Learn to Play night featuring Heroscape.",
+  "game": "Heroscape",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-02-magic",
+  "date": "2026-10-02",
+  "type": "magic",
+  "title": "Friday Night Magic",
+  "start": "18:00",
+  "end": "21:00",
+  "desc": "Weekly Friday Night Magic.",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-04-villainous",
+  "date": "2026-10-04",
+  "type": "villainous",
+  "title": "Disney Villainous",
+  "start": "16:00",
+  "end": null,
+  "desc": "Sunday Villainous session: Disney edition. End time not posted.",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-05-chess-kids",
+  "date": "2026-10-05",
+  "type": "chess",
+  "title": "Kids Chess",
+  "start": "17:00",
+  "end": "18:00",
+  "desc": "Monday chess hour for kids.",
+  "n": "-kids",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-05-chess-open",
+  "date": "2026-10-05",
+  "type": "chess",
+  "title": "Open Chess",
+  "start": "18:00",
+  "end": "20:00",
+  "desc": "Open chess play.",
+  "n": "-open",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-08-ltp",
+  "date": "2026-10-08",
+  "type": "ltp",
+  "title": "Learn to Play: Labyrinth",
+  "start": "18:00",
+  "end": "19:00",
+  "desc": "Thursday Learn to Play night featuring Labyrinth.",
+  "game": "Labyrinth",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-09-magic",
+  "date": "2026-10-09",
+  "type": "magic",
+  "title": "Friday Night Magic",
+  "start": "18:00",
+  "end": "21:00",
+  "desc": "Weekly Friday Night Magic.",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-11-villainous",
+  "date": "2026-10-11",
+  "type": "villainous",
+  "title": "Star Wars Villainous",
+  "start": "16:00",
+  "end": null,
+  "desc": "Sunday Villainous session: Star Wars edition. End time not posted.",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-12-chess-kids",
+  "date": "2026-10-12",
+  "type": "chess",
+  "title": "Kids Chess",
+  "start": "17:00",
+  "end": "18:00",
+  "desc": "Monday chess hour for kids.",
+  "n": "-kids",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-12-chess-open",
+  "date": "2026-10-12",
+  "type": "chess",
+  "title": "Open Chess",
+  "start": "18:00",
+  "end": "20:00",
+  "desc": "Open chess play.",
+  "n": "-open",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-15-ltp",
+  "date": "2026-10-15",
+  "type": "ltp",
+  "title": "Learn to Play: Unmatched",
+  "start": "18:00",
+  "end": "19:00",
+  "desc": "Thursday Learn to Play night featuring Unmatched.",
+  "game": "Unmatched",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-16-magic",
+  "date": "2026-10-16",
+  "type": "magic",
+  "title": "Friday Night Magic",
+  "start": "18:00",
+  "end": "21:00",
+  "desc": "Weekly Friday Night Magic.",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-18-villainous",
+  "date": "2026-10-18",
+  "type": "villainous",
+  "title": "Disney Villainous",
+  "start": "16:00",
+  "end": null,
+  "desc": "Sunday Villainous session: Disney edition. End time not posted.",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-19-chess-kids",
+  "date": "2026-10-19",
+  "type": "chess",
+  "title": "Kids Chess",
+  "start": "17:00",
+  "end": "18:00",
+  "desc": "Monday chess hour for kids.",
+  "n": "-kids",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-19-chess-open",
+  "date": "2026-10-19",
+  "type": "chess",
+  "title": "Open Chess",
+  "start": "18:00",
+  "end": "20:00",
+  "desc": "Open chess play.",
+  "n": "-open",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-22-ltp",
+  "date": "2026-10-22",
+  "type": "ltp",
+  "title": "Learn to Play: Horrified",
+  "start": "18:00",
+  "end": "19:00",
+  "desc": "Thursday Learn to Play night featuring Horrified.",
+  "game": "Horrified",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-23-magic",
+  "date": "2026-10-23",
+  "type": "magic",
+  "title": "Friday Night Magic",
+  "start": "18:00",
+  "end": "21:00",
+  "desc": "Weekly Friday Night Magic.",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-24-special",
+  "date": "2026-10-24",
+  "type": "special",
+  "title": "Halloween Werewolf Night",
+  "start": "18:00",
+  "end": "20:00",
+  "desc": "A beginner-friendly social deception game, a prize drawing, and 10% off select games.",
+  "rsvp": "https://www.facebook.com/share/1FQaKAM64v/",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-25-villainous",
+  "date": "2026-10-25",
+  "type": "villainous",
+  "title": "Marvel Villainous",
+  "start": "16:00",
+  "end": null,
+  "desc": "Sunday Villainous session: Marvel edition. End time not posted.",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-26-chess-kids",
+  "date": "2026-10-26",
+  "type": "chess",
+  "title": "Kids Chess",
+  "start": "17:00",
+  "end": "18:00",
+  "desc": "Monday chess hour for kids.",
+  "n": "-kids",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-26-chess-open",
+  "date": "2026-10-26",
+  "type": "chess",
+  "title": "Open Chess",
+  "start": "18:00",
+  "end": "20:00",
+  "desc": "Open chess play.",
+  "n": "-open",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-29-ltp",
+  "date": "2026-10-29",
+  "type": "ltp",
+  "title": "Learn to Play: Betrayal at House on the Hill",
+  "start": "18:00",
+  "end": "19:00",
+  "desc": "Thursday Learn to Play night featuring Betrayal at House on the Hill.",
+  "game": "Betrayal at House on the Hill",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ },
+ {
+  "id": "2026-10-30-magic",
+  "date": "2026-10-30",
+  "type": "magic",
+  "title": "Friday Night Magic",
+  "start": "18:00",
+  "end": "21:00",
+  "desc": "Weekly Friday Night Magic.",
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+ }
+]
