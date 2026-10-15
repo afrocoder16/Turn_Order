@@ -12,8 +12,12 @@ const events = read("data/events.json");
 const games = read("data/games.json");
 const promos = read("data/promos.json");
 const credits = read("data/image-credits.json");
+const gate = read("data/gate.json");
 const SITE_URL = (process.env.SITE_URL || "").replace(/\/$/, "");
 const THEME = site.theme || "coral";
+// Midvora sample gate: a name-and-email page before the site opens. Off when data/gate.json has "enabled": false.
+// The storage key carries the business name because every github.io project site shares one browser origin.
+const GATE = gate.enabled ? { key: gate.accessKey, business: gate.business, store: `midvora-sample-visitor:${gate.business.toLowerCase().replace(/[^a-z0-9]+/g, "-")}` } : null;
 
 const A = site.address;
 
@@ -46,6 +50,10 @@ function layout({ file, title, desc, body, schema = [], ogImage = "og.jpg", gsap
   const canonical = SITE_URL ? `<link rel="canonical" href="${SITE_URL}/${file === "index.html" ? "" : file}">` : "";
   const ld = schema.map((s) => `<script type="application/ld+json">${JSON.stringify(s)}</script>`).join("\n");
   const vendor = gsap ? `<script src="assets/js/vendor/gsap.min.js" defer></script>\n<script src="assets/js/vendor/ScrollTrigger.min.js" defer></script>\n` : "";
+  // Locks the page before first paint when this browser has no visitor record. If storage is blocked, or gate.js
+  // has not built the gate within 6 seconds, the page opens rather than trapping the visitor.
+  const gateHead = GATE ? `<script>window.MV_GATE=${JSON.stringify(GATE).replace(/</g, "\\u003c")};(function(){var d=document.documentElement;try{if(!localStorage.getItem(MV_GATE.store)){d.classList.add("gate-locked");setTimeout(function(){if(!document.getElementById("gate"))d.classList.remove("gate-locked")},6000)}}catch(e){}})()</script>\n` : "";
+  const gateScript = GATE ? `<script src="assets/js/gate.js" defer></script>\n` : "";
   return finish(`<!DOCTYPE html>
 <html lang="en" data-theme="${THEME}">
 <head>
@@ -63,7 +71,7 @@ function layout({ file, title, desc, body, schema = [], ogImage = "og.jpg", gsap
 ${canonical}
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <script>(function(){var d=document.documentElement;try{var s=new URLSearchParams(location.search).get("theme")||localStorage.getItem("to-theme");if(/^(coral|ember|forest|arcade)$/.test(s))d.setAttribute("data-theme",s)}catch(e){}if(!window.matchMedia||!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("anim")})()</script>
-<link rel="preload" href="assets/fonts/chakra-petch-700-italic.woff2" as="font" type="font/woff2" crossorigin>
+${gateHead}<link rel="preload" href="assets/fonts/chakra-petch-700-italic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/dm-sans.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/styles.css">
@@ -131,7 +139,7 @@ ${body}
 </nav>
 <script type="application/json" id="site-data">${JSON.stringify({ site, events, games, promos }).replace(/</g, "\\u003c")}</script>
 ${vendor}<script src="assets/js/main.js" defer></script>
-</body>
+${gateScript}</body>
 </html>
 `);
 }
