@@ -8,7 +8,7 @@
   var SITE = DATA.site || {}, EVENTS = DATA.events || [], GAMES = DATA.games || [], PROMOS = DATA.promos || [];
   var TZ = SITE.timezone || "America/Chicago";
   var TYPE_LABEL = { ltp: "Learn to Play", magic: "Magic", villainous: "Villainous", chess: "Chess", special: "Special event" };
-  var TYPE_COLOR = { ltp: "var(--cyan)", magic: "var(--violet)", villainous: "var(--green)", chess: "var(--amber)", special: "var(--orange)" };
+  var TYPE_COLOR = { ltp: "var(--t-ltp)", magic: "var(--t-magic)", villainous: "var(--t-villainous)", chess: "var(--t-chess)", special: "var(--c-pop)" };
   var DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   var DAYS_LONG = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -45,6 +45,37 @@
       btn.setAttribute("aria-expanded", open);
       btn.textContent = open ? "Close" : "Menu";
     });
+  }
+
+  /* ---- colour themes: five hex codes each, saved in localStorage ---- */
+  var THEMES = [
+    { id: "coral", name: "Coral Dusk", colors: ["#293241", "#3d5a80", "#98c1d9", "#e0fbfc", "#ee6c4d"] },
+    { id: "ember", name: "Ember", colors: ["#2b1d18", "#74402a", "#e6c79c", "#fff4e2", "#f08a24"] },
+    { id: "forest", name: "Meeple Forest", colors: ["#17302b", "#2f6b57", "#a8d5b8", "#effaf1", "#f4c430"] },
+    { id: "arcade", name: "Arcade Violet", colors: ["#231942", "#5e548e", "#be95c4", "#f5eaff", "#ff5d8f"] }
+  ];
+  var themeBtn = document.getElementById("theme-btn"), themePop = document.getElementById("theme-pop");
+  function setTheme(id, save) {
+    var t = THEMES.filter(function (x) { return x.id === id; })[0];
+    if (!t) return;
+    document.documentElement.dataset.theme = id;
+    if (save) { try { localStorage.setItem("to-theme", id); } catch (e) { /* private mode */ } }
+    var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = t.colors[0];
+    if (themePop) themePop.querySelectorAll(".theme-opt").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.theme === id); });
+    document.dispatchEvent(new Event("themechange"));
+  }
+  if (themeBtn && themePop) {
+    themePop.innerHTML = "<p>Colour scheme</p>" + THEMES.map(function (t) {
+      return '<button type="button" class="theme-opt" data-theme="' + t.id + '" aria-pressed="false"><b>' + t.name + '</b><span class="tick"></span><span class="swatches">' +
+        t.colors.map(function (c) { return '<i style="background:' + c + '"></i>'; }).join("") + "</span></button>";
+    }).join("");
+    var closePop = function () { themePop.hidden = true; themeBtn.setAttribute("aria-expanded", "false"); };
+    themeBtn.addEventListener("click", function (e) { e.stopPropagation(); var open = themePop.hidden; themePop.hidden = !open; themeBtn.setAttribute("aria-expanded", open); });
+    themePop.addEventListener("click", function (e) { var b = e.target.closest(".theme-opt"); if (b) setTheme(b.dataset.theme, true); });
+    document.addEventListener("click", function (e) { if (!themePop.hidden && !e.target.closest(".theme")) closePop(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !themePop.hidden) { closePop(); themeBtn.focus(); } });
+    var fromUrl = new URLSearchParams(location.search).get("theme");
+    setTheme(THEMES.some(function (t) { return t.id === fromUrl; }) ? fromUrl : (document.documentElement.dataset.theme || "coral"), !!fromUrl);
   }
 
   /* ---- open now ---- */
@@ -245,11 +276,22 @@
   var die = document.getElementById("die");
   if (die && GAMES.length) {
     var dieNum = document.getElementById("die-num"), rollCard = document.getElementById("roll-card"), boardHint = document.getElementById("board-hint"), rolling = false;
+    var burst = function () {
+      var gs = window.gsap, board = document.querySelector(".board");
+      if (!gs || REDUCE || !board) return;
+      var cs = getComputedStyle(document.documentElement), cols = [cs.getPropertyValue("--c-pop"), cs.getPropertyValue("--c-soft"), cs.getPropertyValue("--pop-light")];
+      for (var i = 0; i < 26; i++) {
+        var h = el("span", "burst"); h.style.background = cols[i % 3]; board.appendChild(h);
+        var a = Math.random() * Math.PI * 2, d = 90 + Math.random() * 150;
+        gs.fromTo(h, { x: 0, y: 0, scale: 1, rotation: 0, opacity: 1 }, { x: Math.cos(a) * d, y: Math.sin(a) * d + 40, scale: 0.3 + Math.random() * 0.9, rotation: Math.random() * 360, opacity: 0, duration: 1.1 + Math.random() * 0.6, ease: "power2.out", onComplete: (function (n) { return function () { n.remove(); }; })(h) });
+      }
+    };
     var showRoll = function (n) {
       var g = GAMES[(n - 1) % GAMES.length];
       var head = n === 20 ? "Natural 20! Critical pick" : n === 1 ? "Natural 1. Rough roll, great game" : "You rolled a " + n;
       rollCard.innerHTML = "<small>" + head + "</small><h3>" + esc(g.name) + "</h3><p>" + esc(g.blurb) + '</p><div class="meta"><span class="chip">' + g.min + (g.max > g.min ? "–" + g.max : "") + ' players</span><span class="chip">~' + g.minutes + ' min</span><button type="button" class="btn btn-ghost btn-sm" id="roll-again">Roll again</button></div>';
       rollCard.hidden = false;
+      if (n === 20) burst();
       document.getElementById("roll-again").addEventListener("click", roll);
       if (boardHint) boardHint.hidden = true;
     };
@@ -337,37 +379,51 @@
     refresh();
   });
 
-  /* ---- interactive hex field behind the hero ---- */
+  /* ---- interactive hex field behind the hero (colours follow the theme) ----
+     Two canvases: a static grid drawn once with a single stroke, and a small top layer that only
+     redraws the few glowing cells. Cheap enough for phones. */
   var field = document.getElementById("hex-field");
   if (field && field.getContext) {
     (function () {
-      var ctx = field.getContext("2d"), R = 38, S3 = Math.sqrt(3), W = 0, H = 0, dpr = 1, grid = null, lit = {}, raf = 0, onScreen = true;
+      var top = document.createElement("canvas"); top.id = "hex-lit"; top.setAttribute("aria-hidden", "true");
+      field.parentNode.insertBefore(top, field.nextSibling);
+      var gctx = field.getContext("2d"), ctx = top.getContext("2d");
+      var R = 38, S3 = Math.sqrt(3), W = 0, H = 0, dpr = 1, lit = {}, raf = 0, onScreen = true, soft = "152,193,217", pop = "238,108,77";
+      var rgb = function (name, fallback) {
+        var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        var m = /^#([0-9a-f]{6})$/i.exec(v);
+        return m ? parseInt(m[1].slice(0, 2), 16) + "," + parseInt(m[1].slice(2, 4), 16) + "," + parseInt(m[1].slice(4, 6), 16) : fallback;
+      };
       var center = function (c, r) { return [(c + (r & 1 ? 0.5 : 0)) * S3 * R, r * 1.5 * R]; };
-      var path = function (g, x, y, rr) {
-        g.beginPath();
+      var trace = function (g, x, y, rr) {
         for (var i = 0; i < 6; i++) { var a = Math.PI / 180 * (60 * i - 30); g[i ? "lineTo" : "moveTo"](x + rr * Math.cos(a), y + rr * Math.sin(a)); }
         g.closePath();
       };
+      var drawGrid = function () {
+        gctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        gctx.clearRect(0, 0, W, H);
+        gctx.strokeStyle = "rgba(" + soft + ",.15)"; gctx.lineWidth = 1;
+        gctx.beginPath();
+        for (var r = -1; r < H / (1.5 * R) + 2; r++) for (var c = -1; c < W / (S3 * R) + 2; c++) { var p = center(c, r); trace(gctx, p[0], p[1], R - 1); }
+        gctx.stroke();
+      };
       var size = function () {
-        dpr = Math.min(window.devicePixelRatio || 1, 2);
-        var b = field.getBoundingClientRect(); W = b.width; H = b.height;
-        field.width = Math.round(W * dpr); field.height = Math.round(H * dpr);
-        grid = document.createElement("canvas"); grid.width = field.width; grid.height = field.height;
-        var g = grid.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.strokeStyle = "rgba(53,208,255,.11)"; g.lineWidth = 1;
-        for (var r = -1; r < H / (1.5 * R) + 2; r++) for (var c = -1; c < W / (S3 * R) + 2; c++) { var p = center(c, r); path(g, p[0], p[1], R - 1); g.stroke(); }
-        frame();
+        soft = rgb("--c-soft", soft); pop = rgb("--c-pop", pop);
+        dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        var b = field.getBoundingClientRect(); W = b.width; H = Math.min(b.height, 1100);
+        [field, top].forEach(function (cv) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); });
+        drawGrid(); frame();
       };
       var frame = function () {
         raf = 0;
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.clearRect(0, 0, W, H);
-        if (grid) ctx.drawImage(grid, 0, 0, W, H);
         var any = false;
         for (var k in lit) {
           var a = lit[k], rc = k.split(","), p = center(+rc[0], +rc[1]);
-          path(ctx, p[0], p[1], R - 1);
-          ctx.fillStyle = "rgba(53,208,255," + (a * 0.22).toFixed(3) + ")"; ctx.fill();
-          ctx.strokeStyle = "rgba(120,220,255," + Math.min(1, a).toFixed(3) + ")"; ctx.lineWidth = 1.4; ctx.stroke();
+          ctx.beginPath(); trace(ctx, p[0], p[1], R - 1);
+          ctx.fillStyle = "rgba(" + pop + "," + (a * 0.26).toFixed(3) + ")"; ctx.fill();
+          ctx.strokeStyle = "rgba(" + soft + "," + Math.min(1, a).toFixed(3) + ")"; ctx.lineWidth = 1.5; ctx.stroke();
           lit[k] = a * 0.93;
           if (lit[k] < 0.03) delete lit[k]; else any = true;
         }
@@ -381,13 +437,18 @@
           if (dist < radius) { var key = c + "," + r; lit[key] = Math.max(lit[key] || 0, 1 - dist / radius); }
         }
       };
-      size();
-      var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(size, 150); });
-      if (REDUCE) return;
-      var host = field.parentElement;
-      host.addEventListener("pointermove", function (e) { var b = field.getBoundingClientRect(); light(e.clientX - b.left, e.clientY - b.top, 120); kick(); });
-      setInterval(function () { if (!onScreen || document.hidden) return; light(Math.random() * W, Math.random() * H * 0.9, 50); kick(); }, 700);
-      if ("IntersectionObserver" in window) new IntersectionObserver(function (es) { onScreen = es[0].isIntersecting; if (onScreen) kick(); }).observe(host);
+      var boot = function () {
+        size();
+        document.addEventListener("themechange", size);
+        var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(size, 150); });
+        if (REDUCE) return;
+        var host = field.parentElement;
+        host.addEventListener("pointermove", function (e) { var b = field.getBoundingClientRect(); light(e.clientX - b.left, e.clientY - b.top, 120); kick(); });
+        setInterval(function () { if (!onScreen || document.hidden) return; light(Math.random() * W, Math.random() * H * 0.9, 50); kick(); }, 700);
+        if ("IntersectionObserver" in window) new IntersectionObserver(function (es) { onScreen = es[0].isIntersecting; if (onScreen) kick(); }).observe(host);
+      };
+      // keep the grid off the critical path: start once the browser is idle
+      if (window.requestIdleCallback) requestIdleCallback(boot, { timeout: 800 }); else setTimeout(boot, 200);
     })();
   }
 
@@ -423,8 +484,60 @@
     }
   }
 
+  /* ---- cursor spotlight on cards ---- */
+  document.addEventListener("pointermove", function (e) {
+    var t = e.target.closest && e.target.closest(".card, .stat, .event, .promo, .pick");
+    if (!t) return;
+    var r = t.getBoundingClientRect();
+    t.style.setProperty("--mx", (e.clientX - r.left) + "px"); t.style.setProperty("--my", (e.clientY - r.top) + "px");
+  }, { passive: true });
+
+  /* ---- scroll progress bar ---- */
+  var bar = document.getElementById("progress");
+  if (bar && !REDUCE) {
+    var ticking = false;
+    var upd = function () {
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.transform = "scaleX(" + (h > 0 ? Math.min(1, window.scrollY / h) : 0) + ")"; ticking = false;
+    };
+    window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+    upd();
+  }
+
+  /* ---- GSAP: hero entrance, scroll parallax, magnetic buttons ---- */
+  var rootEl = document.documentElement, gs = window.gsap;
+  if (!gs || REDUCE) rootEl.classList.remove("anim");
+  else {
+    var ST = window.ScrollTrigger; if (ST) gs.registerPlugin(ST);
+    if (document.querySelector(".board")) {
+      var tl = gs.timeline({ onComplete: function () { rootEl.classList.remove("anim"); } });
+      tl.fromTo(".board .tile", { scale: 0.15, opacity: 0, rotation: -28 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.9, ease: "back.out(1.7)", stagger: { each: 0.09, from: "center" }, clearProps: "transform,opacity" }, 0.05)
+        .from(".next-card", { y: 26, opacity: 0, duration: 0.7, ease: "power3.out", clearProps: "transform,opacity" }, 0.25)
+        .from(".board-hint", { opacity: 0, duration: 0.6, clearProps: "opacity" }, 0.9);
+      setTimeout(function () { rootEl.classList.remove("anim"); }, 3500);
+    } else rootEl.classList.remove("anim");
+    if (ST && document.querySelector(".hero .board")) {
+      gs.to(".board", { yPercent: -7, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.6 } });
+      gs.to(".hero-grid > div:first-child", { y: -26, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.6 } });
+    }
+    if (ST && document.querySelector(".bands")) {
+      document.querySelectorAll(".band-shift").forEach(function (s, i) {
+        gs.fromTo(s, { xPercent: i ? 7 : -7 }, { xPercent: i ? -7 : 7, ease: "none", scrollTrigger: { trigger: ".bands", start: "top bottom", end: "bottom top", scrub: true } });
+      });
+    }
+    if (window.matchMedia && matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      document.querySelectorAll(".hero .btn, .cta-band .btn").forEach(function (b) {
+        b.classList.add("mag");
+        var xTo = gs.quickTo(b, "x", { duration: 0.4, ease: "power3" }), yTo = gs.quickTo(b, "y", { duration: 0.4, ease: "power3" });
+        b.addEventListener("pointermove", function (e) { var r = b.getBoundingClientRect(); xTo((e.clientX - r.left - r.width / 2) * 0.25); yTo((e.clientY - r.top - r.height / 2) * 0.35); });
+        b.addEventListener("pointerleave", function () { xTo(0); yTo(0); });
+      });
+    }
+  }
+
   /* ---- reveal on scroll ---- */
   var rev = document.querySelectorAll(".reveal");
+  rev.forEach(function (n) { var sib = n.parentElement.querySelectorAll(":scope > .reveal"); n.style.setProperty("--i", Array.prototype.indexOf.call(sib, n)); });
   if ("IntersectionObserver" in window && rev.length) {
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } });
