@@ -4,17 +4,50 @@
   "phone": "(507) 401-3888",
   "phoneHref": "tel:+15074013888",
   "smsHref": "sms:+15074013888",
-  "address": { "street": "1113 E College Dr, Suite 6", "city": "Marshall", "region": "MN", "zip": "56258" },
+  "address": {
+    "street": "1113 E College Dr, Suite 6",
+    "city": "Marshall",
+    "region": "MN",
+    "zip": "56258"
+  },
   "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Turn%20Order%2C%201113%20E%20College%20Dr%20Suite%206%2C%20Marshall%2C%20MN%2056258",
   "timezone": "America/Chicago",
   "hours": [
-    { "day": "Sunday", "open": "12:00", "close": "20:00" },
-    { "day": "Monday", "open": "12:00", "close": "20:00" },
-    { "day": "Tuesday", "open": null, "close": null },
-    { "day": "Wednesday", "open": "12:00", "close": "20:00" },
-    { "day": "Thursday", "open": "12:00", "close": "20:00" },
-    { "day": "Friday", "open": "12:00", "close": "22:00" },
-    { "day": "Saturday", "open": "12:00", "close": "22:00" }
+    {
+      "day": "Sunday",
+      "open": "12:00",
+      "close": "20:00"
+    },
+    {
+      "day": "Monday",
+      "open": "12:00",
+      "close": "20:00"
+    },
+    {
+      "day": "Tuesday",
+      "open": null,
+      "close": null
+    },
+    {
+      "day": "Wednesday",
+      "open": "12:00",
+      "close": "20:00"
+    },
+    {
+      "day": "Thursday",
+      "open": "12:00",
+      "close": "20:00"
+    },
+    {
+      "day": "Friday",
+      "open": "12:00",
+      "close": "22:00"
+    },
+    {
+      "day": "Saturday",
+      "open": "12:00",
+      "close": "22:00"
+    }
   ],
   "socials": {
     "facebook": "https://www.facebook.com/turnorderplay",
@@ -22,6 +55,11 @@
     "tiktok": "https://www.tiktok.com/@turnorderplay",
     "discord": "https://discord.gg/2SvDqBc3d"
   },
-  "seasonal": { "asOf": "October 2026", "text": "A spooky Seasonal Selection is stocked for October, with picks like Horrified and haunted-house games." },
-  "hoursSource": "Marshall Area Chamber of Commerce listing"
+  "seasonal": {
+    "asOf": "October 2026",
+    "text": "A spooky Seasonal Selection is stocked for October, with picks like Horrified and haunted-house games."
+  },
+  "hoursSource": "Marshall Area Chamber of Commerce listing",
+  "opened": "2026-09-02",
+  "messengerHref": "https://m.me/turnorderplay"
 }

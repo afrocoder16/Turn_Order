@@ -1,0 +1,45 @@
+[
+ {
+  "id": "unmatched-oct15",
+  "tag": "10% off",
+  "icon": "⚔️",
+  "title": "Learn to Play Unmatched",
+  "body": "Pick a hero and learn the game with us. Get 10% off any Unmatched volume and all in-store expansions. Event night only.",
+  "from": "2026-10-12",
+  "until": "2026-10-15",
+  "cta": {
+   "label": "See the event",
+   "href": "events.html"
+  },
+  "source": "Facebook post, Oct 12 2026"
+ },
+ {
+  "id": "werewolf-oct24",
+  "tag": "10% off + raffle",
+  "icon": "🐺",
+  "title": "Halloween Werewolf Night",
+  "body": "Saturday, Oct 24, 6 to 8:30 pm. 10% off Horror, Mystery and Social Deduction games all night, plus a raffle for 3 copies of Ultimate Werewolf. Costumes earn bonus tickets.",
+  "from": "2026-10-15",
+  "until": "2026-10-24",
+  "cta": {
+   "label": "RSVP on Facebook",
+   "href": "https://www.facebook.com/share/1FQaKAM64v/",
+   "external": true
+  },
+  "source": "Facebook post, Oct 2 2026"
+ },
+ {
+  "id": "seasonal-oct",
+  "tag": "New in",
+  "icon": "🎃",
+  "title": "Spooky Seasonal Selection",
+  "body": "Halloween-ready games are on the shelves, from monster hunts like Horrified to haunted-house mysteries.",
+  "from": "2026-10-14",
+  "until": "2026-10-31",
+  "cta": {
+   "label": "See the shop",
+   "href": "play.html#shop"
+  },
+  "source": "Facebook post, ~Oct 14 2026"
+ }
+]

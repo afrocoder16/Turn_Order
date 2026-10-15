@@ -1,10 +1,92 @@
 [
- {"name":"Horrified","min":1,"max":5,"minutes":60,"vibes":["coop","spooky"],"blurb":"Team up against classic movie monsters. Everyone wins or loses together."},
- {"name":"Unmatched","min":2,"max":4,"minutes":30,"vibes":["competitive","quick"],"blurb":"Fast head-to-head duels between legendary heroes. Easy to learn, quick to replay."},
- {"name":"Labyrinth","min":2,"max":4,"minutes":20,"vibes":["competitive","quick","family"],"blurb":"Shift the maze walls and race to your treasures. Great for first-timers."},
- {"name":"Betrayal at House on the Hill","min":3,"max":6,"minutes":60,"vibes":["spooky","coop","competitive"],"blurb":"Explore a haunted house together until one of you turns on the rest."},
- {"name":"Villainous","min":2,"max":4,"minutes":50,"vibes":["competitive","strategy"],"blurb":"Play the villain. Every character has their own goal and their own way to win."},
- {"name":"Heroscape","min":2,"max":4,"minutes":60,"vibes":["competitive","strategy"],"blurb":"Build a battlefield, command your army, and fight over the high ground."},
- {"name":"Werewolf","min":5,"max":20,"minutes":30,"vibes":["party","spooky"],"blurb":"A social deception game: talk, bluff and work out who the wolves are."},
- {"name":"Chess","min":2,"max":2,"minutes":45,"vibes":["competitive","strategy"],"blurb":"The classic. Open chess nights run Mondays, with a kids hour first."}
+ {
+  "name": "Horrified",
+  "min": 1,
+  "max": 5,
+  "minutes": 60,
+  "vibes": [
+   "coop",
+   "spooky"
+  ],
+  "blurb": "Team up against classic movie monsters. Everyone wins or loses together."
+ },
+ {
+  "name": "Unmatched",
+  "min": 2,
+  "max": 4,
+  "minutes": 30,
+  "vibes": [
+   "competitive",
+   "quick"
+  ],
+  "blurb": "Fast head-to-head duels between legendary heroes. Easy to learn, quick to replay."
+ },
+ {
+  "name": "Pokémon Labyrinth",
+  "min": 2,
+  "max": 4,
+  "minutes": 25,
+  "vibes": [
+   "competitive",
+   "quick",
+   "family"
+  ],
+  "blurb": "Slide the maze tiles to open new paths and catch Pokémon. Easy to pick up, whether you're 8 or 80."
+ },
+ {
+  "name": "Betrayal at House on the Hill",
+  "min": 3,
+  "max": 6,
+  "minutes": 60,
+  "vibes": [
+   "spooky",
+   "coop",
+   "competitive"
+  ],
+  "blurb": "Explore a haunted house together until one of you turns on the rest."
+ },
+ {
+  "name": "Villainous",
+  "min": 2,
+  "max": 4,
+  "minutes": 50,
+  "vibes": [
+   "competitive",
+   "strategy"
+  ],
+  "blurb": "Play the villain. Every character has their own goal and their own way to win."
+ },
+ {
+  "name": "Heroscape",
+  "min": 2,
+  "max": 4,
+  "minutes": 60,
+  "vibes": [
+   "competitive",
+   "strategy"
+  ],
+  "blurb": "Build a battlefield, command your army, and fight over the high ground."
+ },
+ {
+  "name": "Werewolf",
+  "min": 5,
+  "max": 20,
+  "minutes": 30,
+  "vibes": [
+   "party",
+   "spooky"
+  ],
+  "blurb": "A social deception game: talk, bluff and work out who the wolves are."
+ },
+ {
+  "name": "Chess",
+  "min": 2,
+  "max": 2,
+  "minutes": 45,
+  "vibes": [
+   "competitive",
+   "strategy"
+  ],
+  "blurb": "The classic. Open chess nights run Mondays, with a kids hour first."
+ }
 ]

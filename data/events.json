@@ -56,12 +56,12 @@
   "id": "2026-10-08-ltp",
   "date": "2026-10-08",
   "type": "ltp",
-  "title": "Learn to Play: Labyrinth",
+  "title": "Learn to Play: Pokémon Labyrinth",
   "start": "18:00",
   "end": "19:00",
-  "desc": "Thursday Learn to Play night featuring Labyrinth.",
-  "game": "Labyrinth",
-  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+  "desc": "Thursday Learn to Play night featuring Pokémon Labyrinth, a quick maze game for all ages.",
+  "game": "Pokémon Labyrinth",
+  "source": "Facebook posts, Oct 4 and Oct 5 2026"
  },
  {
   "id": "2026-10-09-magic",
@@ -112,9 +112,13 @@
   "title": "Learn to Play: Unmatched",
   "start": "18:00",
   "end": "19:00",
-  "desc": "Thursday Learn to Play night featuring Unmatched.",
+  "desc": "Thursday Learn to Play night featuring Unmatched, with heroes like Medusa, King Arthur, Sinbad and Alice.",
   "game": "Unmatched",
-  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+  "source": "Facebook post, Oct 12 2026",
+  "details": [
+   "Event-night bonus: 10% off any Unmatched volume and all in-store expansions (event night only)",
+   "Pick a hero and learn the game with a guided playthrough"
+  ]
  },
  {
   "id": "2026-10-16-magic",
@@ -124,7 +128,13 @@
   "start": "18:00",
   "end": "21:00",
   "desc": "Weekly Friday Night Magic.",
-  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)",
+  "details": [
+   "Posted for the Oct 9 Point Chase: free entry, prizes, points window 6 to 9 pm, prizes awarded at 9 pm",
+   "Format: casual/focused Commander, max 2 decks you can swap between games, no cEDH decks and no proxies",
+   "The host assigns games as players are ready"
+  ],
+  "unconfirmed": "The Point Chase format was posted for Oct 9. Confirm it continues."
  },
  {
   "id": "2026-10-18-villainous",
@@ -177,7 +187,13 @@
   "start": "18:00",
   "end": "21:00",
   "desc": "Weekly Friday Night Magic.",
-  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)",
+  "details": [
+   "Posted for the Oct 9 Point Chase: free entry, prizes, points window 6 to 9 pm, prizes awarded at 9 pm",
+   "Format: casual/focused Commander, max 2 decks you can swap between games, no cEDH decks and no proxies",
+   "The host assigns games as players are ready"
+  ],
+  "unconfirmed": "The Point Chase format was posted for Oct 9. Confirm it continues."
  },
  {
   "id": "2026-10-24-special",
@@ -185,10 +201,19 @@
   "type": "special",
   "title": "Halloween Werewolf Night",
   "start": "18:00",
-  "end": "20:00",
-  "desc": "A beginner-friendly social deception game, a prize drawing, and 10% off select games.",
+  "end": "20:30",
+  "desc": "Ultimate Werewolf, the classic game of bluffing and social deduction. No experience needed, and staff run every game.",
   "rsvp": "https://www.facebook.com/share/1FQaKAM64v/",
-  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+  "source": "Facebook event post, Oct 2 2026 (poster says 6-8:30 pm; the Oct 4 calendar graphic says 6-8 pm)",
+  "cost": "",
+  "details": [
+   "6:00 pm: Learn to Play and Round 1, a warm-up game that's good for beginners",
+   "6:30 pm: Round 2, with advanced roles added (Seer, Witch, Tanner and more)",
+   "7:15 pm: Round 3, with special rules and maximum chaos",
+   "End of night: grand prize raffle (you must be present to win)",
+   "Raffle: 3 copies of Ultimate Werewolf. Earn 1 ticket for every game you play, plus 2 bonus tickets for wearing a costume",
+   "Snack bar and cooler open. 10% off all Horror, Mystery and Social Deduction board games all night"
+  ]
  },
  {
   "id": "2026-10-25-villainous",
@@ -241,6 +266,12 @@
   "start": "18:00",
   "end": "21:00",
   "desc": "Weekly Friday Night Magic.",
-  "source": "Facebook post, Oct 4 2026 (October Event Schedule)"
+  "source": "Facebook post, Oct 4 2026 (October Event Schedule)",
+  "details": [
+   "Posted for the Oct 9 Point Chase: free entry, prizes, points window 6 to 9 pm, prizes awarded at 9 pm",
+   "Format: casual/focused Commander, max 2 decks you can swap between games, no cEDH decks and no proxies",
+   "The host assigns games as players are ready"
+  ],
+  "unconfirmed": "The Point Chase format was posted for Oct 9. Confirm it continues."
  }
 ]

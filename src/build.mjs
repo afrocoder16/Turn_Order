@@ -10,6 +10,7 @@ const read = (f) => JSON.parse(fs.readFileSync(path.join(root, f), "utf8"));
 const site = read("data/site.json");
 const events = read("data/events.json");
 const games = read("data/games.json");
+const promos = read("data/promos.json");
 const credits = read("data/image-credits.json");
 const SITE_URL = (process.env.SITE_URL || "").replace(/\/$/, "");
 
@@ -123,7 +124,7 @@ ${body}
   <a href="${site.mapsUrl}" rel="noopener" target="_blank">Directions</a>
   <a href="events.html">Events</a>
 </nav>
-<script type="application/json" id="site-data">${JSON.stringify({ site, events, games }).replace(/</g, "\\u003c")}</script>
+<script type="application/json" id="site-data">${JSON.stringify({ site, events, games, promos }).replace(/</g, "\\u003c")}</script>
 <script src="assets/js/main.js" defer></script>
 </body>
 </html>
@@ -216,6 +217,13 @@ pages["index.html"] = layout({
   </div>
 </section>
 
+<section class="promos" id="promos" aria-labelledby="promos-h" hidden>
+  <div class="wrap">
+    <div class="promos-head"><h2 id="promos-h">This week at the shop</h2><span>Updated weekly</span></div>
+    <div class="promo-list" id="promo-list"></div>
+  </div>
+</section>
+
 <section class="section">
   <div class="wrap">
     <div class="section-head reveal">
@@ -278,8 +286,8 @@ pages["index.html"] = layout({
       <p class="kicker">Why Turn Order</p>
       <h2>A place to find your people.</h2>
       <p>Owners Ana and Marcos Marrero moved to Marshall from Florida about four years ago. Marcos hadn't found a regular gaming group, so they opened a place where local players can find each other.</p>
-      <p>Whether you've played for years or have never rolled a die, there's a table with room for you.</p>
-      <p style="font-size:.85rem;color:var(--ink-soft)">Source: Marshall Independent, Aug. 28, 2026.</p>
+      <p>Marcos describes Turn Order as a clean, comfortable space built by someone who actually plays the games, not a corporate chain. Whether you've played for years or have never rolled a die, there's a table with room for you.</p>
+      <p style="font-size:.85rem;color:var(--ink-soft)">Open since September 2, 2026. Sources: Marshall Independent, Aug. 28, 2026; Turn Order on Facebook.</p>
       <a class="btn btn-dark" href="${site.socials.discord}" rel="noopener" target="_blank">Join the Discord</a>
     </div>
     <figure class="photo reveal" style="margin:0">${img("magic-players", "Two players holding fanned-out trading cards over a wooden table")}<figcaption>Sample photo, to be replaced with the shop's own.</figcaption></figure>
@@ -305,7 +313,7 @@ pages["index.html"] = layout({
 const faqPlay = [
   ["Is open play free?", `<p>Open tables are free or carry a small fee. ${CONFIRM}</p><p>Trying a game from the premium library, which has 100+ titles, was planned at $5 to $10 when the shop announced its opening in August 2026. ${CONFIRM}</p>`],
   ["I've never played a modern board game. Where do I start?", `<p>Thursday evenings are Learn to Play nights, 6 to 7 pm, where a different game is taught each week. The Halloween Werewolf night on October 24 is also beginner-friendly. Or <a href="index.html#finder-section">try the game finder</a>.</p>`],
-  ["Is there food?", `<p>Light snacks are available.</p>`],
+  ["Is there food?", `<p>Yes. There's a snack bar and cooler with sodas, energy drinks and snacks, for purchase.</p>`],
   ["Can kids play?", `<p>Monday's Kids Chess hour runs 5 to 6 pm. For other events, ask us about age suitability. ${CONFIRM}</p>`],
   ["Do I need to reserve a table?", `<p>Reservations for open tables aren't posted. Call ${site.phone} to ask. If you want a guaranteed space for a group, look at the <a href="rooms.html">private rooms</a>. ${CONFIRM}</p>`],
 ];
@@ -322,10 +330,10 @@ ${pageHead("Play & Shop", "Sit down. Play something.", "Open tables, a game libr
       <p class="kicker">Open play</p>
       <h2>Tables are waiting.</h2>
       <ul class="ticks">
-        <li><span>Open tables for board games, card games and dice.</span></li>
+        <li><span>Grab a table, pick a game from the dedicated library, and start playing.</span></li>
         <li><span>Open play is free or a small fee. ${CONFIRM}</span></li>
         <li><span>A premium library of 100+ games to try, planned at $5 to $10. ${CONFIRM}</span></li>
-        <li><span>Light snacks on hand.</span></li>
+        <li><span>A snack bar and cooler with sodas, energy drinks and snacks, for purchase.</span></li>
       </ul>
       <a class="btn btn-dark" href="index.html#finder-section">Not sure what to play? Try the finder</a>
     </div>
@@ -339,10 +347,37 @@ ${pageHead("Play & Shop", "Sit down. Play something.", "Open tables, a game libr
     <div class="reveal">
       <p class="kicker">The shop</p>
       <h2>Take the fun home.</h2>
-      <p>Turn Order sells board games, card games and dice, from first-game-night picks to things for the long-time hobbyist.</p>
+      <p>Turn Order stocks modern board games, card games, tabletop RPGs and gaming accessories, from first-game-night picks to things for the long-time hobbyist.</p>
       <p><b>Seasonal pick (${site.seasonal.asOf}):</b> ${site.seasonal.text}</p>
       <p>Shopping is in store. There's no online checkout in this concept, and stock changes, so call ${site.phone} to ask whether something's on the shelf.</p>
       <a class="btn btn-dark" href="${site.phoneHref}">Call the shop</a>
+    </div>
+  </div>
+</section>
+
+<section class="section dark" id="request">
+  <div class="wrap split">
+    <div class="reveal">
+      <p class="kicker">Game requests</p>
+      <h2>Tell us what to stock next.</h2>
+      <p>The shelves are still filling up, and the owners are leaving room for what you want to see. Send a request from here, or post it in the Discord.</p>
+      <ul class="ticks">
+        <li><span>Missing a favorite? Ask us to stock it.</span></li>
+        <li><span>Want to try before you buy? Ask about the library.</span></li>
+      </ul>
+      <a class="btn btn-ghost" href="${site.socials.discord}" rel="noopener" target="_blank">Post in the Discord</a>
+    </div>
+    <div class="panel reveal">
+      <form class="composer" data-kind="game" aria-label="Game request builder">
+        <div class="field" style="margin-bottom:1rem"><label for="g-game">Which game?</label><input id="g-game" name="game" type="text" maxlength="80" placeholder="e.g. Wingspan" autocomplete="off"></div>
+        <div class="field" style="margin-bottom:1.2rem"><label for="g-why">Why this one? (optional)</label><textarea id="g-why" name="why" placeholder="Great with two players, our group loves it…"></textarea></div>
+        <div class="actions" style="margin:0">
+          <a class="btn btn-primary" data-sms href="${site.smsHref}">Text it to the shop</a>
+          <button type="submit" class="btn btn-ghost" data-copy>Copy message</button>
+        </div>
+        <div class="composer-out" data-out tabindex="-1" aria-live="polite"></div>
+        <p class="finder-note">Nothing is sent from this site. It opens your own messaging app, or you can copy the text.</p>
+      </form>
     </div>
   </div>
 </section>
@@ -381,16 +416,16 @@ ${pageHead("Events", "Always something on the table.", "A regular rhythm all wee
 <section class="section">
   <div class="wrap" style="max-width:900px">
     <div class="section-head reveal"><p class="kicker">Calendar</p><h2>Upcoming events.</h2></div>
-    <div class="filters" role="group" aria-label="Filter events by type">
+    <div class="filter-row"><div class="filters" role="group" aria-label="Filter events by type">
       <button type="button" data-filter="all" aria-pressed="true">All</button>
       <button type="button" data-filter="ltp" aria-pressed="false">Learn to Play</button>
       <button type="button" data-filter="magic" aria-pressed="false">Magic</button>
       <button type="button" data-filter="villainous" aria-pressed="false">Villainous</button>
       <button type="button" data-filter="chess" aria-pressed="false">Chess</button>
       <button type="button" data-filter="special" aria-pressed="false">Special</button>
-    </div>
+    </div><button type="button" class="btn btn-outline btn-sm" id="add-all" hidden>Add all to calendar</button></div>
     <div id="event-list" aria-live="polite"><noscript><div class="empty"><p>JavaScript shows the live calendar. Until then, see <a href="${site.socials.facebook}">our Facebook page</a>.</p></div></noscript></div>
-    <p style="color:var(--ink-soft);font-size:.9rem;margin-top:2rem">Event fees, age guidance and capacity aren't posted. Ask at the shop. ${CONFIRM} Times are Central. RSVP links go to Facebook.</p>
+    <p style="color:var(--ink-soft);font-size:.9rem;margin-top:2rem">Fees and age guidance aren't posted for most events. Ask at the shop. ${CONFIRM} Times are Central. RSVP links go to Facebook.</p>
   </div>
 </section>
 `,
@@ -400,7 +435,7 @@ ${pageHead("Events", "Always something on the table.", "A regular rhythm all wee
 const faqRooms = [
   ["How do I book a room?", `<p>Text or call ${site.phone}. The request builder above writes the message for you. Nothing is sent from this website; it opens your own messaging app, or you can copy the text.</p>`],
   ["How much does a room cost?", `<p>Two private rooms are rented by the hour. Rates aren't posted yet. ${CONFIRM}</p>`],
-  ["How many people fit?", `<p>Ask us when you request. ${CONFIRM}</p>`],
+  ["How many people fit?", `<p>The private rooms have custom gaming tables that seat 6 to 8 players.</p>`],
   ["What can I do in a room?", `<p>Rooms are for your group's own game session: board games, card games, a campaign or a birthday. Ask about using the shop's library.</p>`],
 ];
 pages["rooms.html"] = layout({
@@ -419,7 +454,8 @@ ${pageHead("Private rooms", "Your table. Your rules.", "Two private rooms, rente
       <ul class="ticks">
         <li><span>Long sessions that shouldn't be interrupted.</span></li>
         <li><span>A group that wants to stay together and loud.</span></li>
-        <li><span>Rates and room size: ask when you request. ${CONFIRM}</span></li>
+        <li><span>Custom gaming tables that seat 6 to 8 players.</span></li>
+        <li><span>Rates: ask when you request. ${CONFIRM}</span></li>
       </ul>
     </div>
     <figure class="photo reveal" style="margin:0">${img("rpg-group", "Four people gathered around a table playing a tabletop role-playing game", { sizes: "(max-width: 920px) 100vw, 560px" })}<figcaption>Sample photo, to be replaced with the shop's own.</figcaption></figure>
@@ -429,7 +465,7 @@ ${pageHead("Private rooms", "Your table. Your rules.", "Two private rooms, rente
   <div class="wrap">
     <div class="section-head reveal"><p class="kicker">Request builder</p><h2>Write your request in 30 seconds.</h2><p>Fill in what you know. We'll write the message, and you send it from your own phone.</p></div>
     <div class="panel reveal">
-      <form id="composer" aria-label="Private room request builder">
+      <form class="composer" data-kind="room" aria-label="Private room request builder">
         <div class="fields" style="grid-template-columns:repeat(4,1fr)">
           <div class="field"><label for="r-date">Date</label><input id="r-date" name="date" type="date"></div>
           <div class="field"><label for="r-time">Start time</label><input id="r-time" name="time" type="time" step="900"></div>
@@ -438,11 +474,11 @@ ${pageHead("Private rooms", "Your table. Your rules.", "Two private rooms, rente
         </div>
         <div class="field" style="margin-bottom:1.2rem"><label for="r-note">What are you playing? (optional)</label><textarea id="r-note" name="note" placeholder="Birthday party, D&amp;D campaign, a new board game…"></textarea></div>
         <div class="actions" style="margin:0">
-          <a class="btn btn-primary" id="composer-sms" href="${site.smsHref}">Text this to the shop</a>
-          <button type="submit" class="btn btn-ghost" id="composer-copy">Copy message</button>
+          <a class="btn btn-primary" data-sms href="${site.smsHref}">Text this to the shop</a>
+          <button type="submit" class="btn btn-ghost" data-copy>Copy message</button>
           <a class="btn btn-ghost" href="${site.phoneHref}">Call ${site.phone}</a>
         </div>
-        <div class="composer-out" id="composer-out" tabindex="-1" aria-live="polite"></div>
+        <div class="composer-out" data-out tabindex="-1" aria-live="polite"></div>
       </form>
     </div>
   </div>
