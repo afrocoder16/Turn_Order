@@ -4,7 +4,7 @@ A fast, static website concept for Turn Order (board-game shop and play space, 1
 
 ## What's in it
 
-**Look:** built on the hexagon from the shop's logo. Sections alternate light and dark, with one "pop" colour for buttons and highlights. The default palette is Coral Dusk (slate, steel, sky, ice and coral). Self-hosted fonts (Chakra Petch, DM Sans). No tracking, no cookies, no third-party requests.
+**Look:** built on the hexagon from the shop's logo. Sections alternate light and dark, with one "pop" colour for buttons and highlights. The default palette is Coral Dusk (slate, steel, sky, ice and coral). Self-hosted fonts (Chakra Petch, DM Sans). No tracking, no cookies, no third-party requests, apart from the Midvora sample gate described below.
 
 **Colour schemes:** the palette button in the header switches the whole site live between Coral Dusk, Ember, Meeple Forest and Arcade Violet. The choice is remembered in the visitor's browser. Open any page with `?theme=ember` (or `forest`, `arcade`, `coral`) to link straight to one. Each theme is five hex codes at the top of `assets/css/styles.css` (search for `data-theme`), plus a matching entry in `THEMES` in `assets/js/main.js`. Set the default in `data/site.json` (`"theme"`).
 
@@ -43,6 +43,20 @@ To rebuild: `node src/build.mjs` (Node 18+, no installs). The pages are regenera
 
 Demo any moment: add `?now=2026-10-24T18:30` to a page URL to see the site as if it were then (promos, countdown, open/closed, tracker all follow it).
 
+## Midvora sample gate
+
+While this is a sample, a first-time visitor sees a Midvora page asking for their name and email. Submitting it emails Midvora (through [Web3Forms](https://web3forms.com)) with the name, email, time, referring page and browser, then reloads into the site. The visitor is remembered in their browser (`localStorage`, key `midvora-sample-visitor:turn-order`), so they see it once per browser.
+
+- Settings are in `data/gate.json`: `enabled`, the Web3Forms `accessKey` (public by design: it only lets a page send mail to Midvora) and the `business` name used on the page and in the email subject. With an empty `accessKey` nothing is sent and the visitor just goes through, which is handy for a local preview.
+- It is a soft gate: it records who looked, it does not hide anything. The pages and files are still public.
+- How it loads: a small snippet that `src/build.mjs` writes into every page's `<head>` checks the browser's storage. A visitor already on record loads nothing more. Anyone else has the page hidden and `assets/js/gate.js` loaded.
+- It never traps a visitor. If the browser blocks storage, or the gate has not drawn itself within 6 seconds, the site opens. If sending fails, the visitor sees "try again in 5 minutes" and can retry.
+- Built to survive stale caches (GitHub Pages lets browsers keep files for 10 minutes). `gate.js` carries its own styling inside a shadow root, so the site's CSS cannot reach it and an old copy of `styles.css` cannot leave it half-styled. Its address carries a version tag made from the gate's files (`gate.js?v=…`), so an edited gate is never served from an old copy. Keep it that way: do not move the gate's styling into `assets/css/styles.css`.
+- The heading uses Fraunces (`assets/fonts/fraunces-700.woff2`, SIL OFL), fetched only when the gate shows.
+- Before handing the site to the shop, set `"enabled": false` in `data/gate.json` and rebuild. The pages then come out exactly as they were before the gate existed.
+
+Rebuild after any change with `SITE_URL=https://afrocoder16.github.io/Turn_Order node src/build.mjs`. To see the gate again in a browser, clear the site's storage (or delete the `midvora-sample-visitor:turn-order` key).
+
 ## Third-party code
 
 GSAP 3.15 and its ScrollTrigger plugin (`assets/js/vendor/`) drive the hero intro and scroll effects. They are self-hosted and used under GSAP's standard "no charge" licence (https://gsap.com/standard-license). The site works without them: if they fail to load, everything is simply static. Only the home page loads them.
@@ -65,4 +79,5 @@ Static files, so any host works. For GitHub Pages: push to `main`, then Settings
 - axe-core: 0 violations on all 7 pages in all 4 themes, at 360 px and 1280 px (56 combinations). HTML validator: 0 errors.
 - Lighthouse mobile (standard simulated throttling): 100 accessibility, 100 best practices, 100 SEO on every page. Performance 93-99 on inner pages and about 87-89 on the home page, which carries the most motion. Real-browser first paint is under half a second; under heavy CPU throttling the home page's main thread is busy for a couple of seconds.
 - Interactions tested in headless Chrome: theme switch and persistence, hero intro, d20 and confetti, countdown states, tracker, filters, calendar export, request builders, promo expiry by date, reduced motion.
-- Not yet checked: real phones, Facebook's in-app browser, and owner or local-user testing.
+- Sample gate (added after the checks above, which were run without it; tested in Chrome on 2026-10-16): reproduced the earlier failure (new pages while the browser still held the previous stylesheet) and ran the same steps on this version; every page and a deep link; three phone sizes; sending with no connection, a rejected key, a server error and no answer for 15 seconds, plus success, with the network faked; a returning visitor loading nothing extra (`index.html` grows by about 0.5 KB); the site opening when `gate.js` is missing or storage is blocked; nothing behind the gate reachable by keyboard; an edited gate being picked up after the next deploy; axe-core 4.13 (WCAG 2.2 AA plus best practice) with 0 violations, and the gradient button's text at 4.7:1 and 6.3:1 by calculation.
+- Not yet checked: Safari and Firefox, real phones, Facebook's in-app browser, and owner or local-user testing.
