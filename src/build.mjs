@@ -1,6 +1,7 @@
 // Static site builder: node src/build.mjs
 // Reads data/*.json, writes the HTML pages into the project root. No dependencies.
 // Optional: SITE_URL=https://example.com node src/build.mjs  (adds absolute URLs for sharing + sitemap)
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -12,8 +13,23 @@ const events = read("data/events.json");
 const games = read("data/games.json");
 const promos = read("data/promos.json");
 const credits = read("data/image-credits.json");
+const gate = read("data/gate.json");
 const SITE_URL = (process.env.SITE_URL || "").replace(/\/$/, "");
 const THEME = site.theme || "coral";
+
+// Midvora sample gate: a name-and-email page before the site opens (see README). Off when data/gate.json has "enabled": false.
+// The storage key carries the business name because every github.io project site shares one browser origin.
+// "v" is a version tag taken from the gate's own files: change the gate and its address changes, so browsers
+// and GitHub's cache can never hand out an old copy of it.
+const gateVersion = () => {
+  const hash = crypto.createHash("sha1");
+  for (const f of ["assets/js/gate.js", "assets/img/midvora-logo.png", "assets/fonts/fraunces-700.woff2"]) {
+    const bytes = fs.readFileSync(path.join(root, f));
+    hash.update(f.endsWith(".js") ? bytes.toString("utf8").replace(/\r\n/g, "\n") : bytes);
+  }
+  return hash.digest("hex").slice(0, 8);
+};
+const GATE = gate.enabled ? { key: gate.accessKey, business: gate.business, store: `midvora-sample-visitor:${gate.business.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`, v: gateVersion() } : null;
 
 const A = site.address;
 
@@ -46,6 +62,10 @@ function layout({ file, title, desc, body, schema = [], ogImage = "og.jpg", gsap
   const canonical = SITE_URL ? `<link rel="canonical" href="${SITE_URL}/${file === "index.html" ? "" : file}">` : "";
   const ld = schema.map((s) => `<script type="application/ld+json">${JSON.stringify(s)}</script>`).join("\n");
   const vendor = gsap ? `<script src="assets/js/vendor/gsap.min.js" defer></script>\n<script src="assets/js/vendor/ScrollTrigger.min.js" defer></script>\n` : "";
+  // Gate snippet. A visitor already on record gets nothing more. Anyone else has the page hidden (the hiding rule is
+  // injected here, so it does not depend on any stylesheet) and assets/js/gate.js loaded. If the gate has not drawn
+  // itself within 6 seconds, or storage is blocked, the page opens rather than trapping the visitor.
+  const gateHead = GATE ? `<script>window.MV_GATE=${JSON.stringify(GATE).replace(/</g, "\\u003c")};(function(){var g=window.MV_GATE,d=document.documentElement;try{if(localStorage.getItem(g.store))return}catch(e){return}d.classList.add("gate-locked");var s=document.createElement("style");s.textContent="html.gate-locked,html.gate-locked body{overflow:hidden;background:#f4f8ff}html.gate-locked body>:not(.gate),html.gate-locked body>:not(.gate) *{visibility:hidden!important}";document.head.appendChild(s);var j=document.createElement("script");j.src="assets/js/gate.js?v="+g.v;document.head.appendChild(j);setTimeout(function(){if(!document.getElementById("gate"))d.classList.remove("gate-locked")},6000)})()</script>\n` : "";
   return finish(`<!DOCTYPE html>
 <html lang="en" data-theme="${THEME}">
 <head>
@@ -63,7 +83,7 @@ function layout({ file, title, desc, body, schema = [], ogImage = "og.jpg", gsap
 ${canonical}
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <script>(function(){var d=document.documentElement;try{var s=new URLSearchParams(location.search).get("theme")||localStorage.getItem("to-theme");if(/^(coral|ember|forest|arcade)$/.test(s))d.setAttribute("data-theme",s)}catch(e){}if(!window.matchMedia||!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("anim")})()</script>
-<link rel="preload" href="assets/fonts/chakra-petch-700-italic.woff2" as="font" type="font/woff2" crossorigin>
+${gateHead}<link rel="preload" href="assets/fonts/chakra-petch-700-italic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/dm-sans.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/styles.css">
